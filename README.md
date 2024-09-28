@@ -6,6 +6,7 @@
 ### Key Features
 Real-time Parking Availability: Access up-to-date information on parking spots around your location.
 Cross-platform Support: EZPark is designed to work seamlessly on:
+
 &nbsp;&nbsp;&nbsp;iOS  
 &nbsp;&nbsp;&nbsp;macOS  
 &nbsp;&nbsp;&nbsp;Windows  
