@@ -76,130 +76,116 @@ ezpark_backend/
 ### Steps
 
 1. **Clone the Repository**
-
-    ```bash
-    git clone https://github.com/yourusername/ezpark_backend.git
-    cd ezpark_backend
-    ```
-
 2. **Create a Virtual Environment**
-
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
-
+   
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   ```
 3. **Install Dependencies**
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
+   
+   ```bash
+   pip install -r requirements.txt
+   ```
 4. **Install MySQL Server**
-
-    - **Windows**: Download and install MySQL from [MySQL Downloads](https://dev.mysql.com/downloads/mysql/).
-    - **macOS**: Use Homebrew:
-
-        ```bash
-        brew install mysql
-        ```
-
-    - **Linux**: Use your distribution's package manager, e.g., for Ubuntu:
-
-        ```bash
-        sudo apt update
-        sudo apt install mysql-server
-        ```
-
+   
+   - **Windows**: Download and install MySQL from [MySQL Downloads](https://dev.mysql.com/downloads/mysql/).
+   - **macOS**: Use Homebrew:
+     
+     ```bash
+     brew install mysql
+     ```
+   - **Linux**: Use your distribution's package manager, e.g., for Ubuntu:
+     
+     ```bash
+     sudo apt update
+     sudo apt install mysql-server
+     ```
 5. **Start MySQL Server**
-
-    - **Windows**: Start the MySQL service from the Services panel.
-    - **macOS/Linux**:
-
-        ```bash
-        sudo service mysql start
-        ```
-
+   
+   - **Windows**: Start the MySQL service from the Services panel.
+   - **macOS/Linux**:
+     
+     ```bash
+     sudo service mysql start
+     ```
 6. **Secure MySQL Installation (Optional but Recommended)**
-
-    ```bash
-    sudo mysql_secure_installation
-    ```
+   
+   ```bash
+   sudo mysql_secure_installation
+   ```
 
 ## Configuration
 
 1. **Create a MySQL Database and User**
-
-    Log into the MySQL shell:
-
-    ```bash
-    mysql -u root -p
-    ```
-
-    Then execute the following commands:
-
-    ```sql
-    CREATE DATABASE ezpark_db;
-    CREATE USER 'ezpark_user'@'localhost' IDENTIFIED BY 'your_password';
-    GRANT ALL PRIVILEGES ON ezpark_db.* TO 'ezpark_user'@'localhost';
-    FLUSH PRIVILEGES;
-    EXIT;
-    ```
-
+   
+   Log into the MySQL shell:
+   
+   ```bash
+   mysql -u root -p
+   ```
+   
+   Then execute the following commands:
+   
+   ```sql
+   CREATE DATABASE ezpark_db;
+   CREATE USER 'ezpark_user'@'localhost' IDENTIFIED BY 'your_password';
+   GRANT ALL PRIVILEGES ON ezpark_db.* TO 'ezpark_user'@'localhost';
+   FLUSH PRIVILEGES;
+   EXIT;
+   ```
 2. **Environment Variables**
-
-    Create a `.env` file in the root directory and add the following configurations:
-
-    ```env
-    DATABASE_URL=mysql+pymysql://ezpark_user:your_password@localhost/ezpark_db
-    SECRET_KEY=your-secret-key
-    ```
-
-    - **`DATABASE_URL`**: Specifies the MySQL database connection string.
-    - **`SECRET_KEY`**: A secret key used for security purposes, such as JWT token generation.
-
+   
+   Create a `.env` file in the root directory and add the following configurations:
+   
+   ```env
+   DATABASE_URL=mysql+pymysql://ezpark_user:your_password@localhost/ezpark_db
+   SECRET_KEY=your-secret-key
+   ```
+   
+   - **`DATABASE_URL`**: Specifies the MySQL database connection string.
+   - **`SECRET_KEY`**: A secret key used for security purposes, such as JWT token generation.
 3. **Settings Management**
-
-    The `app/config/settings.py` file uses Pydantic's `BaseSettings` to manage configurations. It automatically reads from the `.env` file.
-
-    ```python
-    # app/config/settings.py
-    from pydantic import BaseSettings
-
-    class Settings(BaseSettings):
-        database_url: str = "mysql+pymysql://ezpark_user:your_password@localhost/ezpark_db"
-        secret_key: str = "your-secret-key"
-
-        class Config:
-            env_file = ".env"
-
-    settings = Settings()
-    ```
-
+   
+   The `app/config/settings.py` file uses Pydantic's `BaseSettings` to manage configurations. It automatically reads from the `.env` file.
+   
+   ```python
+   # app/config/settings.py
+   from pydantic import BaseSettings
+   
+   class Settings(BaseSettings):
+       database_url: str = "mysql+pymysql://ezpark_user:your_password@localhost/ezpark_db"
+       secret_key: str = "your-secret-key"
+   
+       class Config:
+           env_file = ".env"
+   
+   settings = Settings()
+   ```
 4. **Update `database.py` for MySQL**
-
-    Ensure that the database utility is configured to use MySQL.
-
-    ```python
-    # app/utils/database.py
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import sessionmaker, declarative_base
-    from app.config.settings import settings
-
-    engine = create_engine(
-        settings.database_url,
-        pool_pre_ping=True
-    )
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    Base = declarative_base()
-
-    def get_db():
-        db = SessionLocal()
-        try:
-            yield db
-        finally:
-            db.close()
-    ```
+   
+   Ensure that the database utility is configured to use MySQL.
+   
+   ```python
+   # app/utils/database.py
+   from sqlalchemy import create_engine
+   from sqlalchemy.orm import sessionmaker, declarative_base
+   from app.config.settings import settings
+   
+   engine = create_engine(
+       settings.database_url,
+       pool_pre_ping=True
+   )
+   SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+   Base = declarative_base()
+   
+   def get_db():
+       db = SessionLocal()
+       try:
+           yield db
+       finally:
+           db.close()
+   ```
 
 ## Running the Application
 
@@ -222,20 +208,19 @@ uvicorn app.main:app --reload
 The project uses `pytest` for testing. Tests are located in the `tests/` directory.
 
 1. **Install Test Dependencies**
-
-    Ensure that `pytest` is installed. It should already be included in `requirements.txt`. If not, install it:
-
-    ```bash
-    pip install pytest
-    ```
-
+   
+   Ensure that `pytest` is installed. It should already be included in `requirements.txt`. If not, install it:
+   
+   ```bash
+   pip install pytest
+   ```
 2. **Run Tests**
-
-    ```bash
-    pytest
-    ```
-
-    This command will discover and run all test cases in the `tests/` directory.
+   
+   ```bash
+   pytest
+   ```
+   
+   This command will discover and run all test cases in the `tests/` directory.
 
 ### Example Test Case
 
@@ -257,86 +242,79 @@ def test_read_endpoint1():
 ### Adding a New API Endpoint
 
 1. **Create a New Endpoint File**
-
-    Create a new Python file in the `app/api/` directory, e.g., `new_endpoint.py`.
-
-    ```python
-    # app/api/new_endpoint.py
-    from fastapi import APIRouter, Depends
-    from app.utils.database import get_db
-    from sqlalchemy.orm import Session
-
-    router = APIRouter()
-
-    @router.get("/")
-    async def read_new_endpoint(db: Session = Depends(get_db)):
-        # Your logic here
-        return {"message": "New endpoint data"}
-    ```
-
+   
+   Create a new Python file in the `app/api/` directory, e.g., `new_endpoint.py`.
+   
+   ```python
+   # app/api/new_endpoint.py
+   from fastapi import APIRouter, Depends
+   from app.utils.database import get_db
+   from sqlalchemy.orm import Session
+   
+   router = APIRouter()
+   
+   @router.get("/")
+   async def read_new_endpoint(db: Session = Depends(get_db)):
+       # Your logic here
+       return {"message": "New endpoint data"}
+   ```
 2. **Include the New Router in `main.py`**
-
-    ```python
-    # app/main.py
-    from fastapi import FastAPI
-    from app.api import endpoint1, endpoint2, new_endpoint  # Import the new endpoint
-
-    app = FastAPI(
-        title="EZPark Backend",
-        description="Backend API for EZPark website",
-        version="1.0.0"
-    )
-
-    app.include_router(endpoint1.router, prefix="/api/endpoint1", tags=["Endpoint1"])
-    app.include_router(endpoint2.router, prefix="/api/endpoint2", tags=["Endpoint2"])
-    app.include_router(new_endpoint.router, prefix="/api/new_endpoint", tags=["NewEndpoint"])  # Include the new router
-    ```
-
+   
+   ```python
+   # app/main.py
+   from fastapi import FastAPI
+   from app.api import endpoint1, endpoint2, new_endpoint  # Import the new endpoint
+   
+   app = FastAPI(
+       title="EZPark Backend",
+       description="Backend API for EZPark website",
+       version="1.0.0"
+   )
+   
+   app.include_router(endpoint1.router, prefix="/api/endpoint1", tags=["Endpoint1"])
+   app.include_router(endpoint2.router, prefix="/api/endpoint2", tags=["Endpoint2"])
+   app.include_router(new_endpoint.router, prefix="/api/new_endpoint", tags=["NewEndpoint"])  # Include the new router
+   ```
 3. **Create Models and Utilities as Needed**
-
-    If your new endpoint requires new database models or utility functions, add them to the respective directories (`app/models/` or `app/utils/`).
-
+   
+   If your new endpoint requires new database models or utility functions, add them to the respective directories (`app/models/` or `app/utils/`).
 4. **Write Tests**
-
-    Add a new test file in the `tests/` directory, e.g., `test_new_endpoint.py`, and write test cases for your new endpoint.
-
-    ```python
-    # tests/test_new_endpoint.py
-    from fastapi.testclient import TestClient
-    from app.main import app
-
-    client = TestClient(app)
-
-    def test_read_new_endpoint():
-        response = client.get("/api/new_endpoint/")
-        assert response.status_code == 200
-        assert response.json() == {"message": "New endpoint data"}
-    ```
+   
+   Add a new test file in the `tests/` directory, e.g., `test_new_endpoint.py`, and write test cases for your new endpoint.
+   
+   ```python
+   # tests/test_new_endpoint.py
+   from fastapi.testclient import TestClient
+   from app.main import app
+   
+   client = TestClient(app)
+   
+   def test_read_new_endpoint():
+       response = client.get("/api/new_endpoint/")
+       assert response.status_code == 200
+       assert response.json() == {"message": "New endpoint data"}
+   ```
 
 ## Contributing
 
 Contributions are welcome! Please follow these steps to contribute:
 
 1. **Fork the Repository**
-
 2. **Create a New Branch**
-
-    ```bash
-    git checkout -b feature/YourFeature
-    ```
-
+   
+   ```bash
+   git checkout -b feature/YourFeature
+   ```
 3. **Make Your Changes**
-
 4. **Commit Your Changes**
-
-    ```bash
-    git commit -m "Add Your Feature"
-    ```
-
+   
+   ```bash
+   git commit -m "Add Your Feature"
+   ```
 5. **Push to Your Fork**
-
-    ```bash
-    git push origin feature/YourFeature
-    ```
-
+   
+   ```bash
+   git push origin feature/YourFeature
+   ```
 6. **Create a Pull Request**
+
