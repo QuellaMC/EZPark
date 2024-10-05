@@ -1,6 +1,6 @@
-# EZPart Backend
+# EZPark Backend
 
-EZPart Backend is a scalable and modular backend solution for the EZPart website. Built with FastAPI, it is designed to be easily extendable, allowing each API endpoint to reside in its own Python file. Additionally, it includes a `utils` folder for utility modules such as database connections, authentication, and more.
+EZPark Backend is a scalable and modular backend solution for the EZPark website. Built with FastAPI, it is designed to be easily extendable, allowing each API endpoint to reside in its own Python file. Additionally, it includes a `utils` folder for utility modules such as database connections, authentication, and more.
 
 ## Table of Contents
 
@@ -27,7 +27,7 @@ EZPart Backend is a scalable and modular backend solution for the EZPart website
 ## Project Structure
 
 ```
-ezpart_backend/
+ezpark_backend/
 ├── app/
 │   ├── main.py
 │   ├── api/
@@ -79,8 +79,8 @@ ezpart_backend/
 1. **Clone the Repository**
    
    ```bash
-   git clone https://github.com/yourusername/ezpart_backend.git
-   cd ezpart_backend
+   git clone https://github.com/yourusername/ezpark_backend.git
+   cd ezpark_backend
    ```
 2. **Create a Virtual Environment**
    
@@ -101,7 +101,7 @@ ezpart_backend/
    Create a `.env` file in the root directory and add the following configurations:
    
    ```env
-   DATABASE_URL=sqlite:///./ezpart.db
+   DATABASE_URL=sqlite:///./ezpark.db
    SECRET_KEY=your-secret-key
    ```
    
@@ -116,7 +116,7 @@ ezpart_backend/
    from pydantic import BaseSettings
    
    class Settings(BaseSettings):
-       database_url: str = "sqlite:///./ezpart.db"
+       database_url: str = "sqlite:///./ezpark.db"
        secret_key: str = "your-secret-key"
    
        class Config:
@@ -204,8 +204,8 @@ def test_read_endpoint1():
    from app.api import endpoint1, endpoint2, new_endpoint  # Import the new endpoint
    
    app = FastAPI(
-       title="EZPart Backend",
-       description="Backend API for EZPart website",
+       title="EZPark Backend",
+       description="Backend API for EZPark website",
        version="1.0.0"
    )
    
@@ -242,5 +242,6 @@ Contributions are welcome! Please follow these steps to contribute:
    git push origin feature/YourFeature
    ```
 6. **Create a Pull Request**
+
 
 
