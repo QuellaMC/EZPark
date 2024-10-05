@@ -1,0 +1,54 @@
+/* 样式化 body，使其高度为 100%，并设置 margin 和 padding 为 0 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 侧边栏样式，固定在左侧 */
+.sidebar {
+    height: 100vh; /* 100% 视口高度 */
+    width: 200px; /* 固定宽度 */
+    position: fixed; /* 固定在页面左侧 */
+    top: 0;
+    left: 0;
+    background-color: #333;
+    padding-top: 20px;
+}
+
+/* 侧边栏内的标题和链接 */
+.sidebar h2 {
+    color: white;
+    text-align: center;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+}
+
+/* 内容区域，留出侧边栏的宽度 */
+.content {
+    margin-left: 200px; /* 与侧边栏同宽 */
+    padding: 20px;
+    flex-grow: 1;
+}
+
+/* 隐藏页面内容的默认样式 */
+.page {
+    display: none;
+}
+
+/* 激活状态下的页面内容 */
+.page.active {
+    display: block;
+}
