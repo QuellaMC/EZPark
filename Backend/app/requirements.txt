@@ -1,6 +1,6 @@
-fastapi
-uvicorn
-sqlalchemy
-pydantic
-pytest
-PyMySQL
+fastapi==0.115.0
+passlib==1.7.4
+pydantic==2.9.2
+pydantic_settings==2.5.2
+python_jose==3.3.0
+SQLAlchemy==2.0.35
