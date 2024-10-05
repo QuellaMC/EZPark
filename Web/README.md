@@ -1,3 +1,3 @@
-## Web Client
+## Web Server
 
-Web Client for EZPark
+Web Server for EZPark
