@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZPark</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo~3.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- 左侧固定的菜单栏 -->
+    <div class="sidebar">
+        <h2>
+            <img src="logo.jpg" alt="EZPark Logo" style="width: 40px; height: 40px; vertical-align: middle;">
+            EZPark
+        </h2>
+        <a href="#" data-target="home">Home</a>
+        <a href="#" data-target="page1">Find a parking</a>
+        <a href="#" data-target="page2">Parking map</a>
+    </div>
+
+    <!-- 右侧的内容区域 -->
+    <div class="content">
+        <!-- 主页内容 -->
+        <div id="home" class="page active">
+            <h1>Home</h1>
+            <p>This is the home page content.</p>
+        </div>
+
+        <!-- 页面1内容 -->
+        <div id="page1" class="page">
+            <div class="iframe-container">
+                <iframe src="page1.html" class="responsive-iframe" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+        
+        <!-- 页面2内容 -->
+        <div id="page2" class="page">
+            <iframe src="page1.html" class="responsive-iframe" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
