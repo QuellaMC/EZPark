@@ -1,0 +1,4 @@
+1. Created a large map of the school parking lot
+2. Added the function of adaptive size to the map
+3. Added the coordinates of some parking lots on the large map
+4. Added transition animation for focusing on the parking lot location
