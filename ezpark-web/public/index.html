@@ -29,7 +29,7 @@
             <div class="preview-section">
                 <h2>About Our Project</h2>
                 <p>Our platform is designed to make parking stress-free. With real-time updates and a user-friendly interface, finding parking has never been easier!</p>
-                <img src="ezpark.jpg" alt="Project Overview" class="preview-image">
+                <img src="ezpark.jpg" alt="Project Overview" class="preview-image" style="width: 300px; height: auto;">
             </div>
 
             <div class="features-section">
@@ -64,13 +64,12 @@
     <script src="script.js"></script>
     <script>
         function showAvailableSpots() {
-            alert('Showing available parking spots...');
-            // Add functionality to show available parking spots
+            document.getElementById('home').classList.remove('active');
+            document.getElementById('page1').classList.add('active');
         }
 
         function learnMore() {
-            alert('Learn more about EZPark...');
-            // Add functionality for more details about the project
+            alert('The project is still in progress');
         }
     </script>
 </body>
