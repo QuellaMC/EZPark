@@ -23,8 +23,29 @@
     <div class="content">
         <!-- 主页内容 -->
         <div id="home" class="page active">
-            <h1>Home</h1>
-            <p>This is the home page content.</p>
+            <h1>Welcome to EZPark</h1>
+            <p>EZPark is your one-stop solution for finding available parking spots in real-time. Whether you're a student, visitor, or just passing by, we provide an easy and reliable way to locate the perfect parking spot for you.</p>
+            
+            <div class="preview-section">
+                <h2>About Our Project</h2>
+                <p>Our platform is designed to make parking stress-free. With real-time updates and a user-friendly interface, finding parking has never been easier!</p>
+                <img src="ezpark.jpg" alt="Project Overview" class="preview-image" style="width: 300px; height: auto;">
+            </div>
+
+            <div class="features-section">
+                <h2>Features</h2>
+                <ul>
+                    <li>Real-time parking availability</li>
+                    <li>Interactive parking map</li>
+                    <li>Multi-platform support: iOS, macOS, Windows, Android</li>
+                </ul>
+            </div>
+
+            <div class="buttons-section">
+                <h2>Get Started</h2>
+                <button onclick="showAvailableSpots()">View Available Parking Spots</button>
+                <button onclick="learnMore()">Learn More About EZPark</button>
+            </div>
         </div>
 
         <!-- 页面1内容 -->
@@ -36,11 +57,20 @@
         
         <!-- 页面2内容 -->
         <div id="page2" class="page">
-            <iframe src="page1.html" class="responsive-iframe" allowfullscreen="" loading="lazy"></iframe>
+            <iframe src="page2.html" class="responsive-iframe" allowfullscreen="" loading="lazy"></iframe>
         </div>
     </div>
 
-
     <script src="script.js"></script>
+    <script>
+        function showAvailableSpots() {
+            document.getElementById('home').classList.remove('active');
+            document.getElementById('page1').classList.add('active');
+        }
+
+        function learnMore() {
+            alert('The project is still in progress');
+        }
+    </script>
 </body>
 </html>
