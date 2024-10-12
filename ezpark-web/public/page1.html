@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精确控制地图缩放示例</title>
+    <style>
+        /* 页面基本样式，取消默认边距和滚动条 */
+        * {
+            box-sizing: border-box; /* 重置所有元素的 box-sizing */
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* 禁止出现滚动条 */
+        }
+
+        /* 地图容器自适应网页 */
+        .map-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; /* 确保容器宽度为 100% */
+            height: 100%; /* 确保容器高度为 100% */
+            overflow: hidden; /* 防止内容溢出 */
+            background-size: cover; /* 使背景图片适应容器大小 */
+            background-position: center; /* 背景居中显示 */
+            transition: transform 0.5s ease; /* 平滑动画效果 */
+            transform-origin: top left; /* 变换的参考点为左上角 */
+        }
+
+        /* 地图图片样式 */
+        .map-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; /* 使地图宽度自适应容器 */
+            height: 100%; /* 使地图高度自适应容器 */
+            object-fit: cover; /* 保持长宽比并填充容器 */
+            transition: transform 0.5s ease; /* 平滑动画效果 */
+            transform-origin: top left; /* 变换的参考点为左上角 */
+        }
+
+        /* 控制按钮样式 */
+        .controls {
+            position: absolute;
+            top: 50%;
+            left: 30px; /* 距离左侧的距离 */
+            transform: translateY(-50%); /* 垂直居中 */
+            z-index: 10; /* 使按钮显示在地图之上 */
+            background-color: rgba(255, 255, 255, 0.8); /* 半透明背景，确保按钮可见 */
+            border-radius: 8px; /* 圆角边框 */
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column; /* 竖向排列 */
+            gap: 10px; /* 按钮之间的间距 */
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* 停车场信息样式 */
+        .parking-info {
+            position: absolute;
+            bottom: 600px; /* 距离底部的距离 */
+            left: 50%;
+            transform: translateX(60%); /* 水平居中 */
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+            display: none; /* 初始隐藏 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 地图容器 -->
+    <div class="map-container">
+        <div class="map-wrapper">
+            <img src="high-resolution-map.png" alt="高分辨率地图" class="map" id="map">
+        </div>
+        <!-- 控制按钮，整合到地图容器内 -->
+        <!-- College Avenue Parking Garage,Commons East Lot,Commons West Lot -->
+        <div class="controls">
+            <button onclick="resetZoom()">Overview</button>
+            <button onclick="zoomToLocation(1089, 249, 4, 'North Parking Lot')">North Parking Lot</button>
+            <button onclick="zoomToLocation(2220, 1530, 5, 'Davison Parking Lot')">Davison Parking Lot</button>
+            <button onclick="zoomToLocation(768, 1311, 5, 'College Avenue Parking Garage')">College Avenue Parking Garage</button>
+            <button onclick="zoomToLocation(2229, 1257, 5, 'Commons East Lot')">Commons East Lot</button>
+            <button onclick="zoomToLocation(1923, 1215, 5, 'Commons West Lot')">Commons West Lot</button>
+        </div>
+
+        <div class="parking-info" id="parking-info"></div>
+    </div>
+
+    <script>
+        // 停车场信息对象
+        const parkingInfoData = {
+            'North Parking Lot': 'North Parking Lot, \n\'N\' Permit Needed',
+            'Davison Parking Lot': 'Davison Parking Lot, \n\'RH\' Permit Needed',
+            'College Avenue Parking Garage': 'College Avenue Parking Garage, \n\'Garage\' Permit Needed',
+            'Commons East Lot': 'Commons East Lot, \n\'RH\' Permit Needed',
+            'Commons West Lot': 'Commons West Lot, \n\'G\' Permit Needed',
+        };
+        let currentZoom = {
+            x: 0,
+            y: 0,
+            scale: 1,
+            infoKey: ''
+        };
+
+        /**
+         * 缩放到指定的坐标和缩放级别，并显示停车场信息
+         * @param {number} x - 地点的X坐标（地图的原始分辨率下的坐标）
+         * @param {number} y - 地点的Y坐标（地图的原始分辨率下的坐标）
+         * @param {number} scale - 缩放比例（1表示原始大小，2表示放大2倍）
+         * @param {string} infoKey - 停车场信息的键
+         */
+         function zoomToLocation(x, y, scale, infoKey) {
+            currentZoom = { x, y, scale, infoKey };
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const { x, y, scale, infoKey } = currentZoom;
+            const map = document.getElementById('map');
+            const container = map.parentElement;
+
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+
+            // 原始地图尺寸
+            const originalWidth = map.naturalWidth;
+            const originalHeight = map.naturalHeight;
+
+            // 计算容器和地图的宽高比
+            const containerAspectRatio = containerWidth / containerHeight;
+            const imageAspectRatio = originalWidth / originalHeight;
+
+            // 计算图片的缩放因子（因 object-fit: cover）
+            const scaleFactor = Math.max(
+                containerWidth / originalWidth,
+                containerHeight / originalHeight
+            );
+
+            // 计算显示的图像尺寸
+            const displayedImageWidth = originalWidth * scaleFactor;
+            const displayedImageHeight = originalHeight * scaleFactor;
+
+            // 计算图像被裁剪的偏移量
+            const cropX = (displayedImageWidth - containerWidth) / 2;
+            const cropY = (displayedImageHeight - containerHeight) / 2;
+
+            // 根据比例调整目标位置，考虑被裁剪的部分
+            const adjustedX = x * scaleFactor - cropX;
+            const adjustedY = y * scaleFactor - cropY;
+
+            // 计算容器的中心点
+            const containerCenterX = containerWidth / 2;
+            const containerCenterY = containerHeight / 2;
+
+            // 计算缩放后的地图上，指定点应位于容器中心的偏移量
+            const offsetX = adjustedX * scale - containerCenterX;
+            const offsetY = adjustedY * scale - containerCenterY;
+
+            // 设置 transform 属性，实现地图的平移和缩放
+            map.style.transform = `translate(${-offsetX}px, ${-offsetY}px) scale(${scale})`;
+
+            // 显示停车场信息
+            const parkingInfo = document.getElementById('parking-info');
+            if (infoKey) {
+                parkingInfo.innerText = parkingInfoData[infoKey];
+                parkingInfo.style.display = 'block';
+            } else {
+                parkingInfo.style.display = 'none';
+            }
+        }
+
+        /**
+         * 重置缩放，将地图恢复到原始状态，并隐藏停车场信息
+         */
+        function resetZoom() {
+            currentZoom = { x: 1920, y: 1080, scale: 1, infoKey: '' };
+            applyZoom();
+        }
+
+        // 监听窗口大小变化事件
+        window.addEventListener('resize', applyZoom);
+        window.addEventListener('load', resetZoom);
+    </script>
+
+</body>
+</html>
