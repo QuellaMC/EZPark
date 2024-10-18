@@ -1,0 +1,42 @@
+[
+    {
+        "name": "North Parking Lot",
+        "x": 1089,
+        "y": 249,
+        "scale": 4,
+        "infoKey": "North Parking Lot",
+        "url": "https://www.google.com/maps?q=North+Parking+Lot"
+    },
+    {
+        "name": "Davison Parking Lot",
+        "x": 2220,
+        "y": 1530,
+        "scale": 5,
+        "infoKey": "Davison Parking Lot",
+        "url": "https://www.google.com/maps?q=Davison+Parking+Lot"
+    },
+    {
+        "name": "College Avenue Parking Garage",
+        "x": 768,
+        "y": 1311,
+        "scale": 5,
+        "infoKey": "College Avenue Parking Garage",
+        "url": "https://www.google.com/maps?q=College+Avenue+Parking+Garage"
+    },
+    {
+        "name": "Commons East Lot",
+        "x": 2229,
+        "y": 1257,
+        "scale": 5,
+        "infoKey": "Commons East Lot",
+        "url": "https://www.google.com/maps?q=Commons+East+Lot"
+    },
+    {
+        "name": "Commons West Lot",
+        "x": 1923,
+        "y": 1215,
+        "scale": 5,
+        "infoKey": "Commons West Lot",
+        "url": "https://www.google.com/maps?q=Commons+West+Lot"
+    }
+]
