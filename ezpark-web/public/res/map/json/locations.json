@@ -5,7 +5,8 @@
         "y": 249,
         "scale": 4,
         "infoKey": "North Parking Lot",
-        "url": "https://www.google.com/maps?q=North+Parking+Lot"
+        "url": "https://maps.app.goo.gl/vEYQ6yoArkGMQifeA",
+        "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1036.1525756924425!2d-73.67805844402582!3d42.73161993532732!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0fa1ac7a7cfd%3A0x381283c262003ef4!2sNorth%20Lot%2C%20Troy%2C%20NY%2012180!5e0!3m2!1szh-CN!2sus!4v1729228892973!5m2!1szh-CN!2sus"
     },
     {
         "name": "Davison Parking Lot",
@@ -13,7 +14,8 @@
         "y": 1530,
         "scale": 5,
         "infoKey": "Davison Parking Lot",
-        "url": "https://www.google.com/maps?q=Davison+Parking+Lot"
+        "url": "https://maps.app.goo.gl/qfe3XgZFWYfhK5hT8",
+        "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2072.4212705085706!2d-73.67487201792976!3d42.728144485924254!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0f75a4d6853d%3A0x4fe02d52890a8cc5!2sParking%20lot%2C%20Troy%2C%20NY%2012180!5e0!3m2!1szh-CN!2sus!4v1729228869186!5m2!1szh-CN!2sus"
     },
     {
         "name": "College Avenue Parking Garage",
@@ -21,7 +23,8 @@
         "y": 1311,
         "scale": 5,
         "infoKey": "College Avenue Parking Garage",
-        "url": "https://www.google.com/maps?q=College+Avenue+Parking+Garage"
+        "url": "https://maps.app.goo.gl/wciqsth6YthuskQg9",
+        "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d435.6752930636944!2d-73.68078391401171!3d42.727804382858764!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0f0a45a46341%3A0x9814e1225b01a54e!2sParking%20lot%2C%20Troy%2C%20NY%2012180!5e0!3m2!1szh-CN!2sus!4v1729228847988!5m2!1szh-CN!2sus"
     },
     {
         "name": "Commons East Lot",
@@ -29,7 +32,9 @@
         "y": 1257,
         "scale": 5,
         "infoKey": "Commons East Lot",
-        "url": "https://www.google.com/maps?q=Commons+East+Lot"
+        "url": "https://maps.app.goo.gl/hRjdV9Q9MZP9tFhBA",
+        "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d871.3472553450745!2d-73.67512470507843!3d42.72804149677455!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0f758f97b64f%3A0x6ccc35ba34b46dc2!2sParking%20lot%2C%20Troy%2C%20NY%2012180!5e0!3m2!1szh-CN!2sus!4v1729228800190!5m2!1szh-CN!2sus"
+
     },
     {
         "name": "Commons West Lot",
@@ -37,6 +42,7 @@
         "y": 1215,
         "scale": 5,
         "infoKey": "Commons West Lot",
-        "url": "https://www.google.com/maps?q=Commons+West+Lot"
+        "url": "https://maps.app.goo.gl/1AqNZiJkmo9VU8HeA",
+        "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d871.3472553450745!2d-73.67512470507843!3d42.72804149677455!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0f7567d729e7%3A0x7a8d7530e984d6e!2sCommons%20West%20Lot!5e0!3m2!1szh-CN!2sus!4v1729228821413!5m2!1szh-CN!2sus"        
     }
 ]
