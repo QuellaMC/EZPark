@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精确控制地图缩放示例</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+
+    <!-- 地图容器 -->
+    <div class="map-container">
+        <div class="map-wrapper">
+            <img src="../res/map/high-resolution-map.png" alt="高分辨率地图" class="map" id="map">
+        </div>
+        <!-- 控制按钮，整合到地图容器内 -->
+        <!-- College Avenue Parking Garage,Commons East Lot,Commons West Lot -->
+        <div class="controls">
+            <button onclick="resetZoom()">Overview</button>
+            <button onclick="zoomToLocation(locations.get('North Parking Lot'))">North Parking Lot</button>
+            <button onclick="zoomToLocation(locations.get('Davison Parking Lot'))">Davison Parking Lot</button>
+            <button onclick="zoomToLocation(locations.get('College Avenue Parking Garage'))">College Avenue Parking Garage</button>
+            <button onclick="zoomToLocation(locations.get('Commons East Lot'))">Commons East Lot</button>
+            <button class="icon-button" onclick="zoomToLocation(locations.get('Commons West Lot'))">
+                <img src="../res/map/icon/213.png" alt="Commons West Lot">
+            </button>
+        </div>
+        
+        <!-- 停车场信息文本框 -->
+        <div id="parking-info" class="parking-info"></div>
+
+        <!-- 停车场按钮容器 -->
+        <div class="parking-buttons" id="parkingButtons">
+            <button class="square-button" id="btn1">
+                <img src="../res/map/icon/NAV.png" class="icon" alt="1">
+            </button>
+            <button class="square-button" id="btn2">
+                <img src="../res/map/icon/FAV.png" class="icon" alt="2">
+            </button>
+            <button class="square-button" id="btn3">
+                <img src="../res/map/icon/STA.png" class="icon" alt="3">
+            </button>
+            <button class="square-button" id="btn4">
+                <img src="../res/map/icon/SHR.png" class="icon" alt="4">
+            </button>
+        </div>
+
+        <div id="mapModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Choose a map service:</p>
+                <button id="appleMaps">Apple Maps</button>
+                <button id="googleMaps">Google Maps</button>
+            </div>
+        </div>
+
+    <script src="../script.js"></script>
+    <script src="map.js"></script>
+    
+
+</body>
+
+</html>
