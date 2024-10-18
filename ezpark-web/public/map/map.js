@@ -1,3 +1,15 @@
+//import { Location } from 'location.js';
+
+class Location {
+    constructor(x, y, scale, infoKey, url, embedUrl) {
+        this.x = x;
+        this.y = y;
+        this.scale = scale;
+        this.infoKey = infoKey;
+        this.url = url;
+        this.embedUrl = embedUrl;
+    }
+}
 
 // 停车场信息对象
 const parkingInfoData = {
@@ -15,6 +27,22 @@ let currentZoom = {
     infoKey: ''
 };
 
+let currentLocationUrl = '';
+let currentEmbedUrl = '';
+
+let locations = new Map();
+
+fetch('../res/map/json/locations.json')
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(item => {
+            const location = new Location(item.x, item.y, item.scale, item.infoKey, item.url, item.embedUrl);
+            locations.set(item.name, location);
+        });
+    })
+    .catch(error => console.error('Error loading locations:', error));
+
+
 /**
  * 缩放到指定的坐标和缩放级别，并显示停车场信息
  * @param {number} x - 地点的X坐标（地图的原始分辨率下的坐标）
@@ -23,8 +51,8 @@ let currentZoom = {
  * @param {string} infoKey - 停车场信息的键
  */
 function zoomToLocation(location) {
-    const { x, y, scale, infoKey, url } = location;
-    currentZoom = { x, y, scale, infoKey};
+    const { x, y, scale, infoKey, url, embedUrl } = location;
+    currentZoom = { x, y, scale, infoKey };
 
     applyZoom();
     const parkingInfo = document.getElementById('parking-info');
@@ -33,10 +61,12 @@ function zoomToLocation(location) {
         parkingInfo.style.display = 'block';
         document.getElementById('parkingButtons').style.display = 'flex'; // 显示停车按钮
         currentLocationUrl = url; // 设置当前地点的 URL
+        mapIframe.src = embedUrl; // 设置 iframe 的 src 属性
     } else {
         parkingInfo.style.display = 'none';
         document.getElementById('parkingButtons').style.display = 'none'; // 隐藏停车按钮
         currentLocationUrl = ''; // 清空当前地点的 URL
+        mapIframe.src = ''; // 清空 iframe 的 src 属性
     }
 }
 
@@ -157,35 +187,3 @@ document.addEventListener('DOMContentLoaded', function() {
 // 监听窗口大小变化事件
 window.addEventListener('resize', applyZoom);
 window.addEventListener('load', resetZoom);
-
-class Url {
-    constructor(url_g, url_a) {
-        this.url_g = url_g;
-        this.url_a = url_a;
-    }
-}
-
-class Location {
-    constructor(x, y, scale, infoKey, Url) {
-        this.x = x;
-        this.y = y;
-        this.scale = scale;
-        this.infoKey = infoKey;
-        this.url = Url;
-    }
-}
-
-let locations = new Map();
-
-fetch('../res/map/json/locations.json')
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(item => {
-            const location = new Location(item.x, item.y, item.scale, item.infoKey, item.url);
-            locations.set(item.name, location);
-        });
-    })
-    .catch(error => console.error('Error loading locations:', error));
-
-
-    let currentLocationUrl = '';
