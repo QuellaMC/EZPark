@@ -1,127 +1,124 @@
-//import { Location } from 'location.js';
-
 class Location {
-    constructor(x, y, scale, infoKey, url, embedUrl) {
+    constructor(uid, x, y, scale, info, url, embedUrl) {
+        this.uid = uid;
         this.x = x;
         this.y = y;
         this.scale = scale;
-        this.infoKey = infoKey;
+        this.info = info;
         this.url = url;
         this.embedUrl = embedUrl;
     }
 }
 
-// 停车场信息对象
-const parkingInfoData = {
-    'North Parking Lot': 'North Parking Lot, \n\'N\' Permit Needed',
-    'Davison Parking Lot': 'Davison Parking Lot, \n\'RH\' Permit Needed',
-    'College Avenue Parking Garage': 'College Avenue Parking Garage, \n\'Garage\' Permit Needed',
-    'Commons East Lot': 'Commons East Lot, \n\'RH\' Permit Needed',
-    'Commons West Lot': 'Commons West Lot, \n\'G\' Permit Needed',
-};
-
 let currentZoom = {
     x: 0,
     y: 0,
     scale: 1,
-    infoKey: ''
+    info: ''
 };
-
-let currentLocationUrl = '';
+let currentLocationUid = '';
 let currentEmbedUrl = '';
-
 let locations = new Map();
 
 fetch('../res/map/json/locations.json')
     .then(response => response.json())
     .then(data => {
         data.forEach(item => {
-            const location = new Location(item.x, item.y, item.scale, item.infoKey, item.url, item.embedUrl);
+            const location = new Location(item.uid, item.x, item.y, item.scale, item.info, item.url, item.embedUrl);
             locations.set(item.name, location);
         });
     })
     .catch(error => console.error('Error loading locations:', error));
 
-
-/**
- * 缩放到指定的坐标和缩放级别，并显示停车场信息
- * @param {number} x - 地点的X坐标（地图的原始分辨率下的坐标）
- * @param {number} y - 地点的Y坐标（地图的原始分辨率下的坐标）
- * @param {number} scale - 缩放比例（1表示原始大小，2表示放大2倍）
- * @param {string} infoKey - 停车场信息的键
- */
 function zoomToLocation(location) {
-    const { x, y, scale, infoKey, url, embedUrl } = location;
-    currentZoom = { x, y, scale, infoKey };
-
+    const { uid, x, y, scale, info, url, embedUrl } = location;
+    currentZoom = { x, y, scale, info };
     applyZoom();
+    updateCoordinatesDisplay();
     const parkingInfo = document.getElementById('parking-info');
-    if (infoKey) {
-        parkingInfo.innerText = parkingInfoData[infoKey];
+    if (info) {
+        parkingInfo.innerText = info;
         parkingInfo.style.display = 'block';
-        document.getElementById('parkingButtons').style.display = 'flex'; // 显示停车按钮
-        currentLocationUrl = url; // 设置当前地点的 URL
-        mapIframe.src = embedUrl; // 设置 iframe 的 src 属性
+        document.getElementById('parkingButtons').style.display = 'flex';
+        currentLocationUid = uid;
+        mapIframe.src = embedUrl;
     } else {
         parkingInfo.style.display = 'none';
-        document.getElementById('parkingButtons').style.display = 'none'; // 隐藏停车按钮
-        currentLocationUrl = ''; // 清空当前地点的 URL
-        mapIframe.src = ''; // 清空 iframe 的 src 属性
+        document.getElementById('parkingButtons').style.display = 'none';
+        currentLocationUid = '';
+        mapIframe.src = '';
     }
 }
 
 function applyZoom() {
-    const { x, y, scale, infoKey } = currentZoom;
+    const { x, y, scale, info } = currentZoom;
     const map = document.getElementById('map');
     const container = map.parentElement;
 
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
 
-    // 原始地图尺寸
     const originalWidth = map.naturalWidth;
     const originalHeight = map.naturalHeight;
 
-    // 计算容器和地图的宽高比
     const containerAspectRatio = containerWidth / containerHeight;
     const imageAspectRatio = originalWidth / originalHeight;
 
-    // 计算图片的缩放因子（因 object-fit: cover）
     const scaleFactor = Math.max(
         containerWidth / originalWidth,
         containerHeight / originalHeight
     );
 
-    // 计算显示的图像尺寸
     const displayedImageWidth = originalWidth * scaleFactor;
     const displayedImageHeight = originalHeight * scaleFactor;
 
-    // 计算图像被裁剪的偏移量
     const cropX = (displayedImageWidth - containerWidth) / 2;
     const cropY = (displayedImageHeight - containerHeight) / 2;
 
-    // 根据比例调整目标位置，考虑被裁剪的部分
     const adjustedX = x * scaleFactor - cropX;
     const adjustedY = y * scaleFactor - cropY;
 
-    // 计算容器的中心点
     const containerCenterX = containerWidth / 2;
     const containerCenterY = containerHeight / 2;
 
-    // 计算缩放后的地图上，指定点应位于容器中心的偏移量
     const offsetX = adjustedX * scale - containerCenterX;
     const offsetY = adjustedY * scale - containerCenterY;
 
-    // 设置 transform 属性，实现地图的平移和缩放
     map.style.transform = `translate(${-offsetX}px, ${-offsetY}px) scale(${scale})`;
-    // 显示停车场信息
-
 }
 
 function resetZoom() {
+    const map = document.getElementById('map');
+    const container = map.parentElement;
+
+    const originalWidth = map.naturalWidth;
+    const originalHeight = map.naturalHeight;
+
+    const scaleFactor = Math.max(
+        container.clientWidth / originalWidth,
+        container.clientHeight / originalHeight
+    );
+
+    const displayedImageWidth = originalWidth * scaleFactor;
+    const displayedImageHeight = originalHeight * scaleFactor;
+
+    const cropX = (displayedImageWidth - container.clientWidth) / 2;
+    const cropY = (displayedImageHeight - container.clientHeight) / 2;
+
+    const centerX = (container.clientWidth / 2 + cropX) / scaleFactor;
+    const centerY = (container.clientHeight / 2 + cropY) / scaleFactor;
+
     map.style.transform = 'translate(0, 0) scale(1)';
+
+    currentZoom = {
+        x: centerX,
+        y: centerY,
+        scale: 1,
+        info: ''
+    };
+    updateCoordinatesDisplay();
     document.getElementById('parking-info').style.display = 'none';
-    document.getElementById('parkingButtons').style.display = 'none'; // 隐藏停车按钮
+    document.getElementById('parkingButtons').style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -133,57 +130,139 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const parkingButtons = document.getElementById('parkingButtons');
-    parkingButtons.style.display = 'none'; // 初始隐藏停车按钮
+    parkingButtons.style.display = 'none';
 
     document.querySelectorAll('.square-button').forEach(button => {
         const btnId = button.id;
         let hoverTimeout;
 
-        // 鼠标移入事件：修改按钮内容为文字
         button.addEventListener('mouseover', () => {
             hoverTimeout = setTimeout(() => {
                 button.textContent = buttonTexts[btnId].original;
-            }, 100); // 0.1秒延时
+            }, 100);
         });
 
-        // 鼠标移出事件：恢复按钮内容为图标
         button.addEventListener('mouseout', () => {
             clearTimeout(hoverTimeout);
             setTimeout(() => {
                 button.innerHTML = `<img src="${buttonTexts[btnId].hover}" class="icon" alt="${buttonTexts[btnId].original}">`;
-            }, 100); // 0.1秒延时
+            }, 100);
         });
 
-        // 点击事件：处理导航按钮的特殊情况
         button.addEventListener('click', () => {
             if (btnId === 'btn1') {
-                // 显示模态对话框
                 document.getElementById('mapModal').style.display = 'block';
-            } else {
-                window.open(buttonTexts[btnId].url, '_blank');
+            } else if (btnId === 'btn2') {
+                if (currentLocationUid) {
+                    fetch('/api/getFavorites', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                        } else {
+                            const favoriteParkingLots = data.favoriteParkingLots || [];
+                            if (!favoriteParkingLots.includes(currentLocationUid)) {
+                                favoriteParkingLots.push(currentLocationUid);
+                                fetch('/api/updateFavorites', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                    },
+                                    body: JSON.stringify({ favoriteParkingLots })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.error) {
+                                        console.error('Error:', data.error);
+                                    } else {
+                                        alert('Added to favorites successfully');
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                            } else {
+                                alert('This parking lot is already in your favorites');
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+            } else if (btnId === 'btn3') {
+                // 更新停车场状态
+            } else if (btnId === 'btn4') {
+                // 分享停车场
             }
         });
     });
 
-    // 处理模态对话框的关闭按钮
-    document.querySelector('.close').addEventListener('click', () => {
-        document.getElementById('mapModal').style.display = 'none';
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('mapModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
     });
 
-    // 处理模态对话框的 Apple Maps 按钮
     document.getElementById('appleMaps').addEventListener('click', () => {
         window.open('http://maps.apple.com/?q=location', '_blank');
         document.getElementById('mapModal').style.display = 'none';
     });
 
-    // 处理模态对话框的 Google Maps 按钮
     document.getElementById('googleMaps').addEventListener('click', () => {
         window.open(currentLocationUrl, '_blank');
         document.getElementById('mapModal').style.display = 'none';
     });
 });
 
+function moveMap(direction) {
+    const moveStep = 50 / currentZoom.scale;
+    switch (direction) {
+        case 'up':
+            currentZoom.y -= moveStep;
+            break;
+        case 'down':
+            currentZoom.y += moveStep;
+            break;
+        case 'left':
+            currentZoom.x -= moveStep;
+            break;
+        case 'right':
+            currentZoom.x += moveStep;
+            break;
+    }
+    updateCoordinatesDisplay();
+    applyZoom();
+}
 
-// 监听窗口大小变化事件
+function updateCoordinatesDisplay() {
+    const coordinatesDisplay = document.getElementById('coordinatesDisplay');
+    coordinatesDisplay.innerText = `X: ${currentZoom.x.toFixed(2)}, Y: ${currentZoom.y.toFixed(2)}`;
+}
+
+function changeZoom(direction) {
+    const zoomStep = 0.2;
+    if (direction === 'in') {
+        currentZoom.scale += zoomStep;
+    } else if (direction === 'out') {
+        currentZoom.scale = Math.max(0.1, currentZoom.scale - zoomStep);
+    }
+    applyZoom();
+    updateCoordinatesDisplay();
+}
+
+function toggleCollapsible() {
+    const content = document.getElementById('collapsibleContent');
+    if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+    } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+    }
+}
+
 window.addEventListener('resize', applyZoom);
 window.addEventListener('load', resetZoom);

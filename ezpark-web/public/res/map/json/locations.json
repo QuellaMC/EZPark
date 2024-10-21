@@ -1,47 +1,58 @@
 [
     {
+        "uid": 1,
         "name": "North Parking Lot",
-        "x": 1089,
-        "y": 249,
+        "x": 670,
+        "y": 630,
         "scale": 4,
         "infoKey": "North Parking Lot",
+        "info": "North Parking Lot, \n'N' Permit Needed",
         "url": "https://maps.app.goo.gl/vEYQ6yoArkGMQifeA",
         "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1036.1525756924425!2d-73.67805844402582!3d42.73161993532732!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0fa1ac7a7cfd%3A0x381283c262003ef4!2sNorth%20Lot%2C%20Troy%2C%20NY%2012180!5e0!3m2!1szh-CN!2sus!4v1729228892973!5m2!1szh-CN!2sus"
+        
     },
     {
+        "uid": 2,
         "name": "Davison Parking Lot",
-        "x": 2220,
-        "y": 1530,
+        "x": 1173,
+        "y": 1203,
         "scale": 5,
         "infoKey": "Davison Parking Lot",
+        "info": "Davison Parking Lot, \n'RH' Permit Needed",
         "url": "https://maps.app.goo.gl/qfe3XgZFWYfhK5hT8",
         "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2072.4212705085706!2d-73.67487201792976!3d42.728144485924254!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0f75a4d6853d%3A0x4fe02d52890a8cc5!2sParking%20lot%2C%20Troy%2C%20NY%2012180!5e0!3m2!1szh-CN!2sus!4v1729228869186!5m2!1szh-CN!2sus"
     },
     {
+        "uid": 3,
         "name": "College Avenue Parking Garage",
-        "x": 768,
-        "y": 1311,
+        "x": 536,
+        "y": 1092,
         "scale": 5,
         "infoKey": "College Avenue Parking Garage",
+        "info": "North Parking Lot, \n'N' Permit Needed",
         "url": "https://maps.app.goo.gl/wciqsth6YthuskQg9",
         "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d435.6752930636944!2d-73.68078391401171!3d42.727804382858764!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0f0a45a46341%3A0x9814e1225b01a54e!2sParking%20lot%2C%20Troy%2C%20NY%2012180!5e0!3m2!1szh-CN!2sus!4v1729228847988!5m2!1szh-CN!2sus"
     },
     {
+        "uid": 4,
         "name": "Commons East Lot",
-        "x": 2229,
-        "y": 1257,
+        "x": 1180,
+        "y": 1074,
         "scale": 5,
         "infoKey": "Commons East Lot",
+        "info": "North Parking Lot, \n'N' Permit Needed",
         "url": "https://maps.app.goo.gl/hRjdV9Q9MZP9tFhBA",
         "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d871.3472553450745!2d-73.67512470507843!3d42.72804149677455!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0f758f97b64f%3A0x6ccc35ba34b46dc2!2sParking%20lot%2C%20Troy%2C%20NY%2012180!5e0!3m2!1szh-CN!2sus!4v1729228800190!5m2!1szh-CN!2sus"
 
     },
     {
+        "uid": 5,
         "name": "Commons West Lot",
-        "x": 1923,
-        "y": 1215,
+        "x": 1036,
+        "y": 1047,
         "scale": 5,
         "infoKey": "Commons West Lot",
+        "info": "North Parking Lot, \n'N' Permit Needed",
         "url": "https://maps.app.goo.gl/1AqNZiJkmo9VU8HeA",
         "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d871.3472553450745!2d-73.67512470507843!3d42.72804149677455!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89de0f7567d729e7%3A0x7a8d7530e984d6e!2sCommons%20West%20Lot!5e0!3m2!1szh-CN!2sus!4v1729228821413!5m2!1szh-CN!2sus"        
     }

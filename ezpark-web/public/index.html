@@ -5,72 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EZPark</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="logo~3.ico" type="image/x-icon">
+    <link rel="icon" href="res/icon/logo~4.ico" type="image/x-icon">
 </head>
 <body>
     <!-- 左侧固定的菜单栏 -->
     <div class="sidebar">
         <h2>
-            <img src="logo.jpg" alt="EZPark Logo" style="width: 40px; height: 40px; vertical-align: middle;">
+            <img src="res/icon/logo.png" alt="EZPark Logo" style="width: 40px; height: 40px; vertical-align: middle;">
             EZPark
         </h2>
         <a href="#" data-target="home">Home</a>
-        <a href="#" data-target="page1">Find a parking</a>
-        <a href="#" data-target="page2">Parking map</a>
+        <a href="./map/map.html" id="page1">Parking Lot Map</a>
+        <a href="#" data-target="page2">Curbside parking</a>
+        <a href="#" data-target="page3">Share parking status</a>
+        <a href="#" data-target="favorites">My Favorites</a>
+        <div class="user-options">
+            <a href="#" id="loginRegisterLink">Login/Register</a>
+            <span id="userInfo" style="display: none;">
+                <span id="usernameDisplay"></span>
+                <a href="#" id="logoutLink">Logout</a>
+            </span>
+        </div>
     </div>
 
     <!-- 右侧的内容区域 -->
     <div class="content">
         <!-- 主页内容 -->
         <div id="home" class="page active">
-            <h1>Welcome to EZPark</h1>
-            <p>EZPark is your one-stop solution for finding available parking spots in real-time. Whether you're a student, visitor, or just passing by, we provide an easy and reliable way to locate the perfect parking spot for you.</p>
-            
-            <div class="preview-section">
-                <h2>About Our Project</h2>
-                <p>Our platform is designed to make parking stress-free. With real-time updates and a user-friendly interface, finding parking has never been easier!</p>
-                <img src="ezpark.jpg" alt="Project Overview" class="preview-image" style="width: 300px; height: auto;">
-            </div>
-
-            <div class="features-section">
-                <h2>Features</h2>
-                <ul>
-                    <li>Real-time parking availability</li>
-                    <li>Interactive parking map</li>
-                    <li>Multi-platform support: iOS, macOS, Windows, Android</li>
-                </ul>
-            </div>
-
-            <div class="buttons-section">
-                <h2>Get Started</h2>
-                <button onclick="showAvailableSpots()">View Available Parking Spots</button>
-                <button onclick="learnMore()">Learn More About EZPark</button>
-            </div>
+            <br>
+            <h1 class="very-large-text">Don't let parking bother you</h1>
+            <h1 class="very-large-text">In EZPark, we made everthing easy</h1>
+            <br>
+            <h1 class="normal-text">About this website</h1>
+            <p class="normal-text">An open-source website providing parking guidance for students and visitors.</p>
+            <p class="normal-text">Learn about RPI's parking policies or find a street parking spot!</p>
+            <p class="normal-text">Avoid getting tickets and struggling to find a space.</p>
         </div>
 
-        <!-- 页面1内容 -->
-        <div id="page1" class="page">
-            <div class="iframe-container">
-                <iframe src="/map/page1.html" class="responsive-iframe" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-        </div>
-        
         <!-- 页面2内容 -->
         <div id="page2" class="page">
-            <iframe src="page2.html" class="responsive-iframe" allowfullscreen="" loading="lazy"></iframe>
+
+            <h1 class="normal-text">Curbside parking</h1>
+            <p class="normal-text">in progress</p>
+        </div>
+
+        <!-- 页面3内容 -->
+        <div id="page3" class="page">
+            <h1 class="normal-text">Share parking status</h1>
+            <p class="normal-text">in progress</p>
+        </div>
+
+        <!-- 我的收藏页面 -->
+        <div id="favorites" class="page">
+            <h1 class="normal-text">My Favorites</h1>
+            <ul id="favoritesList" class="normal-text"></ul>
         </div>
     </div>
 
-    <script src="script.js"></script>
-    <script>
-        function showAvailableSpots() {
-            document.getElementById('home').classList.remove('active');
-            document.getElementById('page1').classList.add('active');
-        }
+    <!-- 登录/注册模态框 -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="loginFormContainer">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <label for="loginUsername">Username:</label>
+                    <input type="text" id="loginUsername" name="username" required>
+                    <br>
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                    <br>
+                    <button type="submit">Login</button>
+                </form>
+                <p id="loginError" class="error-message"></p>
+                <p>Don't have an account? <a href="#" id="showRegisterForm">Register here</a></p>
+            </div>
+            <div id="registerFormContainer" style="display: none;">
+                <h2>Register</h2>
+                <form id="registerForm">
+                    <label for="registerUsername">Username:</label>
+                    <input type="text" id="registerUsername" name="username" required>
+                    <br>
+                    <label for="registerPassword">Password:</label>
+                    <input type="password" id="registerPassword" name="password" required>
+                    <br>
+                    <button type="submit">Register</button>
+                </form>
+                <p id="registerError" class="error-message"></p>
+                <p>Already have an account? <a href="#" id="showLoginForm">Login here</a></p>
+            </div>
+        </div>
+    </div>
 
-        function learnMore() {
-            alert('The project is still in progress');
-        }
-    </script>
+    <!-- 页脚 -->
+    <footer class="footer" id="footer">
+        <p>
+            @EZPark2024 | <a href="https://github.com/your-repo" target="_blank">GitHub</a> | A RCOS Project.
+        </p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

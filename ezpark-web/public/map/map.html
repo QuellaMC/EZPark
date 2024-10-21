@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZPark - map</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" href="../res/icon/logo~4.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- 地图容器 -->
+    <div class="map-container">
+        <div class="map-wrapper">
+            <img src="../res/map/map.svg" alt="Vector Image" class="map" id="map">
+        </div>
+
+        <!-- 返回主页的按钮 -->
+        <div class="back-to-home">
+            <button onclick="window.location.href='../index.html'">Back to Home</button>
+        </div>
+
+        <!-- 折叠列表 -->
+        <div class="collapsible">
+            <button onclick="toggleCollapsible()"><strong>Parking Lots List</strong></button>
+            <div class="collapsible-content" id="collapsibleContent">
+                <button onclick="resetZoom()">Overview</button>
+                <button onclick="zoomToLocation(locations.get('North Parking Lot'))">North Parking Lot</button>
+                <button onclick="zoomToLocation(locations.get('Davison Parking Lot'))">Davison Parking Lot</button>
+                <button onclick="zoomToLocation(locations.get('College Avenue Parking Garage'))">College Avenue Parking Garage</button>
+                <button onclick="zoomToLocation(locations.get('Commons East Lot'))">Commons East Lot</button>
+                <button onclick="zoomToLocation(locations.get('Commons West Lot'))">Commons West Lot</button>
+            </div>
+        </div>
+        
+        <!-- 停车场信息文本框 -->
+        <div id="parking-info" class="parking-info"></div>
+
+        <!-- 停车场按钮容器 -->
+        <div class="parking-buttons" id="parkingButtons">
+            <button class="square-button" id="btn1">
+                <img src="../res/map/icon/NAV.png" class="icon" alt="1">
+            </button>
+            <button class="square-button" id="btn2">
+                <img src="../res/map/icon/FAV.png" class="icon" alt="2">
+            </button>
+            <button class="square-button" id="btn3">
+                <img src="../res/map/icon/STA.png" class="icon" alt="3">
+            </button>
+            <button class="square-button" id="btn4">
+                <img src="../res/map/icon/SHR.png" class="icon" alt="4">
+            </button>
+        </div>
+
+        <div id="mapModal" class="modal">
+            <div class="modal-content">
+                <p>Choose a map service:</p>
+                <div class="button-container">
+                    <button id="appleMaps">Apple Maps</button>
+                    <button id="googleMaps">Google Maps</button>
+                </div>
+                <iframe id="mapIframe" src="" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+        <!-- 显示当前坐标的元素 -->
+        <div class="coordinates-display" id="coordinatesDisplay">X: 0, Y: 0</div>
+
+        <!-- 移动和缩放按钮 -->
+        <div class="control-buttons">
+            <button onclick="moveMap('up')">Up</button>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="moveMap('left')">Left</button>
+                <button onclick="moveMap('right')">Right</button>
+            </div>
+            <button onclick="moveMap('down')">Down</button>
+            <button onclick="changeZoom('in')">Zoom in</button>
+            <button onclick="changeZoom('out')">Zoom out</button>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script src="map.js"></script>
+</body>
+</html>
