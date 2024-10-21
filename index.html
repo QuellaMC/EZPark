@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZPark</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="res/icon/logo~4.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- 左侧固定的菜单栏 -->
+    <div class="sidebar">
+        <h2>
+            <img src="res/icon/logo.png" alt="EZPark Logo" style="width: 40px; height: 40px; vertical-align: middle;">
+            EZPark
+        </h2>
+        <a href="#" data-target="home">Home</a>
+        <a href="./map/map.html" id="page1">Parking Lot Map</a>
+        <a href="#" data-target="page2">Curbside parking</a>
+        <a href="#" data-target="page3">Share parking status</a>
+        <a href="#" data-target="page4">My Common</a>
+
+        <div class="user-options">
+            <a href="#" id="loginRegisterLink">Login/Register</a>
+            <span id="userInfo" style="display: none;">
+                <span id="usernameDisplay"></span>
+                <a href="#" id="logoutLink">Logout</a>
+            </span>
+        </div>
+    </div>
+
+    <!-- 右侧的内容区域 -->
+    <div class="content">
+        <!-- 主页内容 -->
+        <div id="home" class="page active">
+            <br>
+            <h1 class="very-large-text">Don't let parking bother you</h1>
+            <h1 class="very-large-text">In EZPark, we made everything easy</h1>
+            <br>
+            <h1 class="normal-text">About this website</h1>
+            <p class="normal-text">An open-source website providing parking guidance for students and visitors.</p>
+            <p class="normal-text">Learn about RPI's parking policies or find a street parking spot!</p>
+            <p class="normal-text">Avoid getting tickets and struggling to find a space.</p>
+        </div>
+
+        <!-- 页面2内容 -->
+        <div id="page2" class="page">
+            <h1 class="normal-text">Curbside parking</h1>
+            <p class="normal-text">in progress</p>
+        </div>
+
+        <!-- 页面3内容 -->
+        <div id="page3" class="page">
+            <h1 class="normal-text">Share parking status</h1>
+            <p class="normal-text">in progress</p>
+        </div>
+
+        <!-- 我的收藏页面 -->
+        <div id="page4" class="page">
+            <div class="iframe-container">
+                <iframe src="./commonPage/common.html" class="responsive-iframe" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+
+    <!-- 登录/注册模态框 -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="loginFormContainer">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <label for="loginUsername">Username:</label>
+                    <input type="text" id="loginUsername" name="username" required>
+                    <br>
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                    <br>
+                    <button type="submit">Login</button>
+                </form>
+                <p id="loginError" class="error-message"></p>
+                <p>Don't have an account? <a href="#" id="showRegisterForm">Register here</a></p>
+            </div>
+            <div id="registerFormContainer" style="display: none;">
+                <h2>Register</h2>
+                <form id="registerForm">
+                    <label for="registerUsername">Username:</label>
+                    <input type="text" id="registerUsername" name="username" required>
+                    <br>
+                    <label for="registerPassword">Password:</label>
+                    <input type="password" id="registerPassword" name="password" required>
+                    <br>
+                    <button type="submit">Register</button>
+                </form>
+                <p id="registerError" class="error-message"></p>
+                <p>Already have an account? <a href="#" id="showLoginForm">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer" id="footer">
+        <p>
+            @EZPark2024 | <a href="https://github.com/your-repo" target="_blank">GitHub</a> | A RCOS Project.
+        </p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('favoritesButton').addEventListener('click', () => {
+            window.location.href = 'favorites.html';
+        });
+    </script>
+</body>
+</html>
