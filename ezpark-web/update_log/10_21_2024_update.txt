@@ -1,4 +1,18 @@
-1. Created a large map of the school parking lot
-2. Added the function of adaptive size to the map
-3. Added the coordinates of some parking lots on the large map
-4. Added transition animation for focusing on the parking lot location
+Main Updates:
+
+  A.Map:
+    1,Redrawn the map page UI
+    1.5,Restructured parking lot list
+    2, Added zoom feature to maps
+    3, Added navigation and collection functions to the map
+    4, Separated the map into an HTML
+    5, Added more detailed vector maps
+
+  B.Added the backend database, now users can register and log in to the EZPark
+    1, The user password must be at least 6 characters
+    2, The user's account password will be stored in the database
+    2, Added a safety mechanism, if there is no response for more than 30 minutes, the user will be logged out
+
+  C.Add a new common page to store frequently used parking lots:
+    1, Users can navigate, delete or share their favorite parking lots through this page
+    2, The parking lot information frequently used by users will be stored on the server database
