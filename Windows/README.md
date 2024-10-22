@@ -20,7 +20,7 @@ The Basic Windows Client allows users to enter their name and interact with the 
 
 ### Current Features
 
-- **
+- **Layout**: Tkinter UI that provide a beautiful UI that satisfy the user.
 - **User Input**: Enter your name into a text field.
 - **Interactive Button**: Click a button to display a personalized welcome message.
 - **Label Display**: Shows messages based on user interactions.
