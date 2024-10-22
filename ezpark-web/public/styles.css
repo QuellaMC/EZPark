@@ -448,3 +448,10 @@ body, html {
     margin-top: 10px;
     margin-left: 50px; /* 增加左边距 */
 }
+
+.subpage-text{
+    text-align: left;
+    margin-top: 10px;
+    margin-left: 10px; /* 增加左边距 */
+}
+

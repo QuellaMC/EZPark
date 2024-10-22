@@ -18,7 +18,8 @@
         <a href="./map/map.html" id="page1">Parking Lot Map</a>
         <a href="#" data-target="page2">Curbside parking</a>
         <a href="#" data-target="page3">Share parking status</a>
-        <a href="#" data-target="favorites">My Favorites</a>
+        <a href="#" data-target="page4">My Common</a>
+
         <div class="user-options">
             <a href="#" id="loginRegisterLink">Login/Register</a>
             <span id="userInfo" style="display: none;">
@@ -34,7 +35,7 @@
         <div id="home" class="page active">
             <br>
             <h1 class="very-large-text">Don't let parking bother you</h1>
-            <h1 class="very-large-text">In EZPark, we made everthing easy</h1>
+            <h1 class="very-large-text">In EZPark, we made everything easy</h1>
             <br>
             <h1 class="normal-text">About this website</h1>
             <p class="normal-text">An open-source website providing parking guidance for students and visitors.</p>
@@ -44,7 +45,6 @@
 
         <!-- 页面2内容 -->
         <div id="page2" class="page">
-
             <h1 class="normal-text">Curbside parking</h1>
             <p class="normal-text">in progress</p>
         </div>
@@ -56,11 +56,11 @@
         </div>
 
         <!-- 我的收藏页面 -->
-        <div id="favorites" class="page">
-            <h1 class="normal-text">My Favorites</h1>
-            <ul id="favoritesList" class="normal-text"></ul>
+        <div id="page4" class="page">
+            <div class="iframe-container">
+                <iframe src="./commonPage/common.html" class="responsive-iframe" allowfullscreen="" loading="lazy"></iframe>
+            </div>
         </div>
-    </div>
 
     <!-- 登录/注册模态框 -->
     <div id="authModal" class="modal">
@@ -105,5 +105,10 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        document.getElementById('favoritesButton').addEventListener('click', () => {
+            window.location.href = 'favorites.html';
+        });
+    </script>
 </body>
 </html>
