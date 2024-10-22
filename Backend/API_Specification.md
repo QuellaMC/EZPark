@@ -1,29 +1,29 @@
-# EZPart Backend API Specification
+# EZPark Backend API Specification
 
 ## Table of Contents
 
 1. [API Directory Structure](#1-api-directory-structure)
 2. [Authentication APIs (`auth/`)](#2-authentication-apis-auth)
-    - [2.1.1 Register (`register.py`)](#211-register-registerpy)
-    - [2.1.2 Login (`login.py`)](#212-login-loginpy)
-    - [2.1.3 Email Verification (`email_verification.py`)](#213-email-verification-email_verificationpy)
-    - [2.1.4 Resend Verification Email (`resend_verification.py`)](#214-resend-verification-email-resend_verificationpy)
-    - [2.1.5 Get Verification Code (`get_verification_code.py`)](#215-get-verification-code-get_verification_codepy)
-    - [2.1.6 Verify Verification Code (`verify_verification_code.py`)](#216-verify-verification-code-verify_verification_codepy)
+   - [2.1.1 Register (`register.py`)](#211-register-registerpy)
+   - [2.1.2 Login (`login.py`)](#212-login-loginpy)
+   - [2.1.3 Email Verification (`email_verification.py`)](#213-email-verification-email_verificationpy)
+   - [2.1.4 Resend Verification Email (`resend_verification.py`)](#214-resend-verification-email-resend_verificationpy)
+   - [2.1.5 Get Verification Code (`get_verification_code.py`)](#215-get-verification-code-get_verification_codepy)
+   - [2.1.6 Verify Verification Code (`verify_verification_code.py`)](#216-verify-verification-code-verify_verification_codepy)
 3. [Admin APIs (`admin/`)](#3-admin-apis-admin)
-    - [3.1.1 User Management (`user_management.py`)](#311-user-management-user_managementpy)
-    - [3.1.2 Parking Submission Management (`parking_submission_management.py`)](#312-parking-submission-management-parking_submission_managementpy)
-    - [3.1.3 Configuration Management (`config_management.py`)](#313-configuration-management-config_managementpy)
+   - [3.1.1 User Management (`user_management.py`)](#311-user-management-user_managementpy)
+   - [3.1.2 Parking Submission Management (`parking_submission_management.py`)](#312-parking-submission-management-parking_submission_managementpy)
+   - [3.1.3 Configuration Management (`config_management.py`)](#313-configuration-management-config_managementpy)
 4. [Parking Spaces APIs (`parking_spaces/`)](#4-parking-spaces-parking_spaces)
-    - [4.1.1 Create Parking Space (`create_parking_space.py`)](#411-create-parking-space-create_parking_spacepy)
-    - [4.1.2 Set Full Status (`set_full_status.py`)](#412-set-full-status-set_full_statuspy)
-    - [4.1.3 List Parking Spaces (`list_parking_spaces.py`)](#413-list-parking-spaces-list_parking_spacespy)
-    - [4.1.4 Get Parking Space Details (`get_parking_space_details.py`)](#414-get-parking-space-details-get_parking_space_detailspy)
+   - [4.1.1 Create Parking Space (`create_parking_space.py`)](#411-create-parking-space-create_parking_spacepy)
+   - [4.1.2 Set Full Status (`set_full_status.py`)](#412-set-full-status-set_full_statuspy)
+   - [4.1.3 List Parking Spaces (`list_parking_spaces.py`)](#413-list-parking-spaces-list_parking_spacespy)
+   - [4.1.4 Get Parking Space Details (`get_parking_space_details.py`)](#414-get-parking-space-details-get_parking_space_detailspy)
 5. [Submissions APIs (`submissions/`)](#5-submissions-apis-submissions)
-    - [5.1.1 Submit Parking Space (`submit_parking_space.py`)](#511-submit-parking-space-submit_parking_spacepy)
+   - [5.1.1 Submit Parking Space (`submit_parking_space.py`)](#511-submit-parking-space-submit_parking_spacepy)
 6. [Utils APIs (`utils/`)](#6-utils-apis-utils)
-    - [6.1 Initialize Package (`__init__.py`)](#61-initialize-package-initpy)
-    - [6.2 Additional Utility Modules](#62-additional-utility-modules)
+   - [6.1 Initialize Package (`__init__.py`)](#61-initialize-package-initpy)
+   - [6.2 Additional Utility Modules](#62-additional-utility-modules)
 
 ---
 
@@ -32,7 +32,7 @@
 The following directory structure organizes the API endpoints into logical modules, ensuring maintainability and scalability.
 
 ```
-ezpart_backend/
+ezpark_backend/
 ├── app/
 │   ├── main.py
 │   ├── api/
@@ -42,9 +42,7 @@ ezpart_backend/
 │   │   │   ├── register.py
 │   │   │   ├── login.py
 │   │   │   ├── email_verification.py
-│   │   │   ├── resend_verification.py
-│   │   │   ├── get_verification_code.py
-│   │   │   └── verify_verification_code.py
+│   │   │   └── resend_verification.py
 │   │   ├── admin/
 │   │   │   ├── __init__.py
 │   │   │   ├── user_management.py
@@ -89,60 +87,59 @@ ezpart_backend/
 └── .env
 ```
 
----
-
 ## 2. Authentication APIs (`auth/`)
 
-Handles user registration, login, email verification, resending verification emails, and managing verification codes to prevent automated registrations.
+Handles user registration, login, email verification, and resending verification emails with enhanced security via Google reCAPTCHA.
 
 ### 2.1.1 Register (`register.py`)
 
 - **Path**: `/api/auth/register`
 - **Method**: `POST`
-- **Description**: Registers a new user account, validates verification code, and sends a verification email.
-- **Authentication**: Requires a valid verification code.
-  
+- **Description**: Registers a new user account, validates Google reCAPTCHA, and sends a verification email.
+- **Authentication**: No prior authentication required.
+
 #### Request
 
-- **Headers**: `Content-Type: application/json`
+- **Headers**:
+  
+  - `Content-Type: application/json`
 - **Body**:
-
-    ```json
-    {
-      "name": "John Doe",
-      "email": "john.doe@example.com",
-      "password": "SecurePassword123!",
-      "verification_code": "ABC123"
-    }
-    ```
+  
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "password": "SecurePassword123!",
+    "recaptcha_token": "03AGdBq25..."
+  }
+  ```
 
 #### Response
 
 - **Status Code**: `201 Created`
 - **Body**:
-
+  
+  ```json
+  {
+    "message": "Account created successfully. Please check your email to verify your account."
+  }
+  ```
+- **Error Responses**:
+  
+  - `400 Bad Request`:
+    
     ```json
     {
-      "message": "Account created successfully. Please check your email to verify your account."
+      "detail": "Invalid input or email already registered."
     }
     ```
-
-- **Error Responses**:
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Invalid input or email already registered."
-        }
-        ```
-
-    - `401 Unauthorized`:
-
-        ```json
-        {
-          "detail": "Invalid or expired verification code."
-        }
-        ```
+  - `400 Bad Request` (reCAPTCHA verification failed):
+    
+    ```json
+    {
+      "detail": "reCAPTCHA verification failed."
+    }
+    ```
 
 #### Usage Example
 
@@ -155,7 +152,7 @@ curl -X POST "http://localhost:8000/api/auth/register" \
            "name": "John Doe",
            "email": "john.doe@example.com",
            "password": "SecurePassword123!",
-           "verification_code": "ABC123"
+           "recaptcha_token": "03AGdBq25..."
          }'
 ```
 
@@ -167,47 +164,48 @@ curl -X POST "http://localhost:8000/api/auth/register" \
 - **Method**: `POST`
 - **Description**: Authenticates a user and returns a JWT access token.
 - **Authentication**: Requires valid user credentials.
-  
+
 #### Request
 
-- **Headers**: `Content-Type: application/json`
+- **Headers**:
+  
+  - `Content-Type: application/json`
 - **Body**:
-
-    ```json
-    {
-      "email": "john.doe@example.com",
-      "password": "SecurePassword123!"
-    }
-    ```
+  
+  ```json
+  {
+    "email": "john.doe@example.com",
+    "password": "SecurePassword123!"
+  }
+  ```
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "token_type": "bearer"
+  }
+  ```
+- **Error Responses**:
+  
+  - `401 Unauthorized`:
+    
     ```json
     {
-      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-      "token_type": "bearer"
+      "detail": "Incorrect email or password."
     }
     ```
-
-- **Error Responses**:
-    - `401 Unauthorized`:
-
-        ```json
-        {
-          "detail": "Incorrect email or password."
-        }
-        ```
-
-    - `403 Forbidden`:
-
-        ```json
-        {
-          "detail": "Email not verified."
-        }
-        ```
+  - `403 Forbidden`:
+    
+    ```json
+    {
+      "detail": "Email not verified."
+    }
+    ```
 
 #### Usage Example
 
@@ -229,53 +227,51 @@ curl -X POST "http://localhost:8000/api/auth/login" \
 - **Path**: `/api/auth/verify-email`
 - **Method**: `GET`
 - **Description**: Verifies a user's email using a token sent via email.
-  
+
 #### Request
 
 - **Query Parameters**:
-    - `token` (string, required): The verification token.
-
+  
+  - `token` (string, required): The verification token.
 - **Example URL**:
-
-    ```
-    http://localhost:8000/api/auth/verify-email?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-    ```
+  
+  ```
+  http://localhost:8000/api/auth/verify-email?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  ```
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "message": "Email verified successfully."
+  }
+  ```
+- **Error Responses**:
+  
+  - `400 Bad Request`:
+    
     ```json
     {
-      "message": "Email verified successfully."
+      "detail": "Invalid or expired token."
     }
     ```
-
-- **Error Responses**:
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Invalid or expired token."
-        }
-        ```
-
-    - `404 Not Found`:
-
-        ```json
-        {
-          "detail": "User not found."
-        }
-        ```
-
-    - `400 Bad Request` (if already verified):
-
-        ```json
-        {
-          "message": "Email already verified."
-        }
-        ```
+  - `404 Not Found`:
+    
+    ```json
+    {
+      "detail": "User not found."
+    }
+    ```
+  - `400 Bad Request` (if already verified):
+    
+    ```json
+    {
+      "message": "Email already verified."
+    }
+    ```
 
 #### Usage Example
 
@@ -294,53 +290,53 @@ http://localhost:8000/api/auth/verify-email?token=eyJhbGciOiJIUzI1NiIsInR...
 - **Path**: `/api/auth/resend-verification`
 - **Method**: `POST`
 - **Description**: Resends the verification email to the user, subject to a cooldown period.
-  
+
 #### Request
 
-- **Headers**: `Content-Type: application/json`
+- **Headers**:
+  
+  - `Content-Type: application/json`
 - **Body**:
-
-    ```json
-    {
-      "email": "john.doe@example.com"
-    }
-    ```
+  
+  ```json
+  {
+    "email": "john.doe@example.com"
+  }
+  ```
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "message": "Verification email resent successfully."
+  }
+  ```
+- **Error Responses**:
+  
+  - `429 Too Many Requests`:
+    
     ```json
     {
-      "message": "Verification email resent successfully."
+      "detail": "Please wait before requesting another verification email."
     }
     ```
-
-- **Error Responses**:
-    - `429 Too Many Requests`:
-
-        ```json
-        {
-          "detail": "Please wait before requesting another verification email."
-        }
-        ```
-
-    - `404 Not Found`:
-
-        ```json
-        {
-          "detail": "User not found."
-        }
-        ```
-
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Email already verified."
-        }
-        ```
+  - `404 Not Found`:
+    
+    ```json
+    {
+      "detail": "User not found."
+    }
+    ```
+  - `400 Bad Request`:
+    
+    ```json
+    {
+      "detail": "Email already verified."
+    }
+    ```
 
 #### Usage Example
 
@@ -351,142 +347,6 @@ curl -X POST "http://localhost:8000/api/auth/resend-verification" \
      -H "Content-Type: application/json" \
      -d '{
            "email": "john.doe@example.com"
-         }'
-```
-
----
-
-### 2.1.5 Get Verification Code (`get_verification_code.py`)
-
-- **Path**: `/api/auth/get-verification-code`
-- **Method**: `POST`
-- **Description**: Generates and sends a verification code to the user's email to prevent automated registrations.
-  
-#### Request
-
-- **Headers**: `Content-Type: application/json`
-- **Body**:
-
-    ```json
-    {
-      "email": "john.doe@example.com"
-    }
-    ```
-
-#### Response
-
-- **Status Code**: `200 OK`
-- **Body**:
-
-    ```json
-    {
-      "message": "Verification code sent successfully."
-    }
-    ```
-
-- **Error Responses**:
-    - `429 Too Many Requests`:
-
-        ```json
-        {
-          "detail": "Please wait before requesting another verification code."
-        }
-        ```
-
-    - `404 Not Found`:
-
-        ```json
-        {
-          "detail": "User not found."
-        }
-        ```
-
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Email already verified."
-        }
-        ```
-
-#### Usage Example
-
-**Using `curl`:**
-
-```bash
-curl -X POST "http://localhost:8000/api/auth/get-verification-code" \
-     -H "Content-Type: application/json" \
-     -d '{
-           "email": "john.doe@example.com"
-         }'
-```
-
----
-
-### 2.1.6 Verify Verification Code (`verify_verification_code.py`)
-
-- **Path**: `/api/auth/verify-code`
-- **Method**: `POST`
-- **Description**: Verifies the verification code sent to the user's email as an additional security measure.
-  
-#### Request
-
-- **Headers**: `Content-Type: application/json`
-- **Body**:
-
-    ```json
-    {
-      "email": "john.doe@example.com",
-      "code": "123456"
-    }
-    ```
-
-#### Response
-
-- **Status Code**: `200 OK`
-- **Body**:
-
-    ```json
-    {
-      "message": "Verification code validated successfully."
-    }
-    ```
-
-- **Error Responses**:
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Invalid or expired verification code."
-        }
-        ```
-
-    - `404 Not Found`:
-
-        ```json
-        {
-          "detail": "User not found."
-        }
-        ```
-
-    - `400 Bad Request` (if already verified):
-
-        ```json
-        {
-          "detail": "Email already verified."
-        }
-        ```
-
-#### Usage Example
-
-**Using `curl`:**
-
-```bash
-curl -X POST "http://localhost:8000/api/auth/verify-code" \
-     -H "Content-Type: application/json" \
-     -d '{
-           "email": "john.doe@example.com",
-           "code": "123456"
          }'
 ```
 
@@ -508,44 +368,44 @@ Used by administrators to manage users, review parking space submissions, and mo
 #### Request
 
 - **Headers**:
-    - `Authorization: Bearer <admin_jwt_token>`
+  - `Authorization: Bearer <admin_jwt_token>`
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
-    ```json
-    [
-      {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john.doe@example.com",
-        "is_verified": true,
-        "is_active": true,
-        "is_admin": false,
-        "created_at": "2024-04-01T12:34:56Z"
-      },
-      {
-        "id": 2,
-        "name": "Jane Smith",
-        "email": "jane.smith@example.com",
-        "is_verified": true,
-        "is_active": true,
-        "is_admin": true,
-        "created_at": "2024-04-02T09:20:30Z"
-      }
-    ]
-    ```
-
+  
+  ```json
+  [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "is_verified": true,
+      "is_active": true,
+      "is_admin": false,
+      "created_at": "2024-04-01T12:34:56Z"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "is_verified": true,
+      "is_active": true,
+      "is_admin": true,
+      "created_at": "2024-04-02T09:20:30Z"
+    }
+  ]
+  ```
 - **Error Responses**:
-    - `403 Forbidden`:
-
-        ```json
-        {
-          "detail": "Not authorized to perform this action."
-        }
-        ```
+  
+  - `403 Forbidden`:
+    
+    ```json
+    {
+      "detail": "Not authorized to perform this action."
+    }
+    ```
 
 #### Usage Example
 
@@ -564,51 +424,50 @@ curl -X GET "http://localhost:8000/api/admin/users" \
 - **Method**: `PUT`
 - **Description**: Updates the active status of a specified user.
 - **Authentication**: Admin privileges required.
-  
+
 #### Request
 
 - **Headers**:
-    - `Authorization: Bearer <admin_jwt_token>`
-    - `Content-Type: application/json`
-
+  
+  - `Authorization: Bearer <admin_jwt_token>`
+  - `Content-Type: application/json`
 - **Path Parameters**:
-    - `user_id` (integer, required): ID of the user to update.
-
+  
+  - `user_id` (integer, required): ID of the user to update.
 - **Body**:
-
-    ```json
-    {
-      "is_active": false
-    }
-    ```
+  
+  ```json
+  {
+    "is_active": false
+  }
+  ```
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "message": "User status updated successfully."
+  }
+  ```
+- **Error Responses**:
+  
+  - `404 Not Found`:
+    
     ```json
     {
-      "message": "User status updated successfully."
+      "detail": "User not found."
     }
     ```
-
-- **Error Responses**:
-    - `404 Not Found`:
-
-        ```json
-        {
-          "detail": "User not found."
-        }
-        ```
-
-    - `403 Forbidden`:
-
-        ```json
-        {
-          "detail": "Not authorized to perform this action."
-        }
-        ```
+  - `403 Forbidden`:
+    
+    ```json
+    {
+      "detail": "Not authorized to perform this action."
+    }
+    ```
 
 #### Usage Example
 
@@ -635,44 +494,44 @@ curl -X PUT "http://localhost:8000/api/admin/users/1" \
 #### Request
 
 - **Headers**:
-    - `Authorization: Bearer <admin_jwt_token>`
+  - `Authorization: Bearer <admin_jwt_token>`
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
-    ```json
-    [
-      {
-        "submission_id": 1,
-        "user_id": 2,
-        "address": "456 Elm Street",
-        "parking_count": 15,
-        "permit_required": true,
-        "status": "pending",
-        "submitted_at": "2024-04-10T08:45:00Z"
-      },
-      {
-        "submission_id": 2,
-        "user_id": 3,
-        "address": "789 Oak Avenue",
-        "parking_count": 20,
-        "permit_required": false,
-        "status": "pending",
-        "submitted_at": "2024-04-11T14:30:00Z"
-      }
-    ]
-    ```
-
+  
+  ```json
+  [
+    {
+      "submission_id": 1,
+      "user_id": 2,
+      "address": "456 Elm Street",
+      "parking_count": 15,
+      "permit_required": true,
+      "status": "pending",
+      "submitted_at": "2024-04-10T08:45:00Z"
+    },
+    {
+      "submission_id": 2,
+      "user_id": 3,
+      "address": "789 Oak Avenue",
+      "parking_count": 20,
+      "permit_required": false,
+      "status": "pending",
+      "submitted_at": "2024-04-11T14:30:00Z"
+    }
+  ]
+  ```
 - **Error Responses**:
-    - `403 Forbidden`:
-
-        ```json
-        {
-          "detail": "Not authorized to perform this action."
-        }
-        ```
+  
+  - `403 Forbidden`:
+    
+    ```json
+    {
+      "detail": "Not authorized to perform this action."
+    }
+    ```
 
 #### Usage Example
 
@@ -691,61 +550,59 @@ curl -X GET "http://localhost:8000/api/admin/parking-submissions" \
 - **Method**: `PUT`
 - **Description**: Approves or rejects a specific parking space submission.
 - **Authentication**: Admin privileges required.
-  
+
 #### Request
 
 - **Headers**:
-    - `Authorization: Bearer <admin_jwt_token>`
-    - `Content-Type: application/json`
-
+  
+  - `Authorization: Bearer <admin_jwt_token>`
+  - `Content-Type: application/json`
 - **Path Parameters**:
-    - `submission_id` (integer, required): ID of the submission to review.
-
+  
+  - `submission_id` (integer, required): ID of the submission to review.
 - **Body**:
-
-    ```json
-    {
-      "status": "approved"
-    }
-    ```
-
-    - **Allowed Values**: `"approved"`, `"rejected"`
+  
+  ```json
+  {
+    "status": "approved"
+  }
+  ```
+  
+  - **Allowed Values**: `"approved"`, `"rejected"`
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "message": "Parking submission approved successfully."
+  }
+  ```
+- **Error Responses**:
+  
+  - `400 Bad Request`:
+    
     ```json
     {
-      "message": "Parking submission approved successfully."
+      "detail": "Invalid status value."
     }
     ```
-
-- **Error Responses**:
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Invalid status value."
-        }
-        ```
-
-    - `404 Not Found`:
-
-        ```json
-        {
-          "detail": "Submission not found."
-        }
-        ```
-
-    - `403 Forbidden`:
-
-        ```json
-        {
-          "detail": "Not authorized to perform this action."
-        }
-        ```
+  - `404 Not Found`:
+    
+    ```json
+    {
+      "detail": "Submission not found."
+    }
+    ```
+  - `403 Forbidden`:
+    
+    ```json
+    {
+      "detail": "Not authorized to perform this action."
+    }
+    ```
 
 #### Usage Example
 
@@ -772,32 +629,32 @@ curl -X PUT "http://localhost:8000/api/admin/parking-submissions/1" \
 #### Request
 
 - **Headers**:
-    - `Authorization: Bearer <admin_jwt_token>`
+  - `Authorization: Bearer <admin_jwt_token>`
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "smtp_server": "smtp.example.com",
+    "smtp_port": 587,
+    "smtp_username": "no-reply@example.com",
+    "smtp_sender": "no-reply@example.com",
+    "frontend_url": "http://localhost:3000",
+    "cooldown_period_minutes": 15
+  }
+  ```
+- **Error Responses**:
+  
+  - `403 Forbidden`:
+    
     ```json
     {
-      "smtp_server": "smtp.example.com",
-      "smtp_port": 587,
-      "smtp_username": "no-reply@example.com",
-      "smtp_sender": "no-reply@example.com",
-      "frontend_url": "http://localhost:3000",
-      "cooldown_period_minutes": 15
+      "detail": "Not authorized to perform this action."
     }
     ```
-
-- **Error Responses**:
-    - `403 Forbidden`:
-
-        ```json
-        {
-          "detail": "Not authorized to perform this action."
-        }
-        ```
 
 #### Usage Example
 
@@ -816,65 +673,63 @@ curl -X GET "http://localhost:8000/api/admin/config" \
 - **Method**: `PUT`
 - **Description**: Updates specific system configuration parameters.
 - **Authentication**: Admin privileges required.
-  
+
 #### Request
 
 - **Headers**:
-    - `Authorization: Bearer <admin_jwt_token>`
-    - `Content-Type: application/json`
-
+  
+  - `Authorization: Bearer <admin_jwt_token>`
+  - `Content-Type: application/json`
 - **Body**:
-
-    ```json
-    {
-      "config_key": "smtp_server",
-      "config_value": "smtp.newserver.com"
-    }
-    ```
-
-    - **Allowed `config_key` Values**:
-        - `smtp_server`
-        - `smtp_port`
-        - `smtp_username`
-        - `smtp_sender`
-        - `frontend_url`
-        - `cooldown_period_minutes`
+  
+  ```json
+  {
+    "config_key": "smtp_server",
+    "config_value": "smtp.newserver.com"
+  }
+  ```
+  
+  - **Allowed `config_key` Values**:
+    - `smtp_server`
+    - `smtp_port`
+    - `smtp_username`
+    - `smtp_sender`
+    - `frontend_url`
+    - `cooldown_period_minutes`
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "message": "Configuration updated successfully."
+  }
+  ```
+- **Error Responses**:
+  
+  - `400 Bad Request`:
+    
     ```json
     {
-      "message": "Configuration updated successfully."
+      "detail": "Invalid configuration key or value."
     }
     ```
-
-- **Error Responses**:
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Invalid configuration key or value."
-        }
-        ```
-
-    - `403 Forbidden`:
-
-        ```json
-        {
-          "detail": "Not authorized to perform this action."
-        }
-        ```
-
-    - `404 Not Found`:
-
-        ```json
-        {
-          "detail": "Configuration key not found."
-        }
-        ```
+  - `403 Forbidden`:
+    
+    ```json
+    {
+      "detail": "Not authorized to perform this action."
+    }
+    ```
+  - `404 Not Found`:
+    
+    ```json
+    {
+      "detail": "Configuration key not found."
+    }
+    ```
 
 #### Usage Example
 
@@ -899,55 +754,54 @@ Handles the creation, status updates, and retrieval of parking spaces.
 - **Method**: `POST`
 - **Description**: Creates a new parking space division, including address information, number of parking spots, and whether a permit is required.
 - **Authentication**: Admin privileges required.
-  
+
 #### Request
 
 - **Headers**:
-    - `Authorization: Bearer <admin_jwt_token>`
-    - `Content-Type: application/json`
-
+  
+  - `Authorization: Bearer <admin_jwt_token>`
+  - `Content-Type: application/json`
 - **Body**:
-
-    ```json
-    {
-      "address": "123 Maple Street",
-      "parking_count": 20,
-      "permit_required": true
-    }
-    ```
+  
+  ```json
+  {
+    "address": "123 Maple Street",
+    "parking_count": 20,
+    "permit_required": true
+  }
+  ```
 
 #### Response
 
 - **Status Code**: `201 Created`
 - **Body**:
-
+  
+  ```json
+  {
+    "id": 1,
+    "address": "123 Maple Street",
+    "parking_count": 20,
+    "permit_required": true,
+    "is_full": false,
+    "created_at": "2024-04-15T10:00:00Z"
+  }
+  ```
+- **Error Responses**:
+  
+  - `400 Bad Request`:
+    
     ```json
     {
-      "id": 1,
-      "address": "123 Maple Street",
-      "parking_count": 20,
-      "permit_required": true,
-      "is_full": false,
-      "created_at": "2024-04-15T10:00:00Z"
+      "detail": "Invalid input data."
     }
     ```
-
-- **Error Responses**:
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Invalid input data."
-        }
-        ```
-
-    - `403 Forbidden`:
-
-        ```json
-        {
-          "detail": "Not authorized to perform this action."
-        }
-        ```
+  - `403 Forbidden`:
+    
+    ```json
+    {
+      "detail": "Not authorized to perform this action."
+    }
+    ```
 
 #### Usage Example
 
@@ -972,51 +826,50 @@ curl -X POST "http://localhost:8000/api/parking-spaces" \
 - **Method**: `POST`
 - **Description**: Allows a user to mark a parking space as full or not full to inform other users.
 - **Authentication**: User must be authenticated.
-  
+
 #### Request
 
 - **Headers**:
-    - `Authorization: Bearer <user_jwt_token>`
-    - `Content-Type: application/json`
-
+  
+  - `Authorization: Bearer <user_jwt_token>`
+  - `Content-Type: application/json`
 - **Path Parameters**:
-    - `parking_space_id` (integer, required): ID of the parking space.
-
+  
+  - `parking_space_id` (integer, required): ID of the parking space.
 - **Body**:
-
-    ```json
-    {
-      "is_full": true
-    }
-    ```
+  
+  ```json
+  {
+    "is_full": true
+  }
+  ```
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "message": "Parking space status updated successfully."
+  }
+  ```
+- **Error Responses**:
+  
+  - `404 Not Found`:
+    
     ```json
     {
-      "message": "Parking space status updated successfully."
+      "detail": "Parking space not found."
     }
     ```
-
-- **Error Responses**:
-    - `404 Not Found`:
-
-        ```json
-        {
-          "detail": "Parking space not found."
-        }
-        ```
-
-    - `403 Forbidden`:
-
-        ```json
-        {
-          "detail": "Not authorized to perform this action."
-        }
-        ```
+  - `403 Forbidden`:
+    
+    ```json
+    {
+      "detail": "Not authorized to perform this action."
+    }
+    ```
 
 #### Usage Example
 
@@ -1036,52 +889,52 @@ curl -X POST "http://localhost:8000/api/parking-spaces/1/set-full" \
 - **Path**: `/api/parking-spaces`
 - **Method**: `GET`
 - **Description**: Retrieves a list of all parking spaces, supporting pagination.
-  
+
 #### Request
 
 - **Query Parameters** (optional):
-    - `page` (integer, optional): Page number (default: 1).
-    - `limit` (integer, optional): Number of items per page (default: 10).
+  - `page` (integer, optional): Page number (default: 1).
+  - `limit` (integer, optional): Number of items per page (default: 10).
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "parking_spaces": [
+      {
+        "id": 1,
+        "address": "123 Maple Street",
+        "parking_count": 20,
+        "permit_required": true,
+        "is_full": false,
+        "created_at": "2024-04-15T10:00:00Z"
+      },
+      {
+        "id": 2,
+        "address": "456 Pine Avenue",
+        "parking_count": 15,
+        "permit_required": false,
+        "is_full": true,
+        "created_at": "2024-04-16T14:30:00Z"
+      }
+    ],
+    "total": 2,
+    "page": 1,
+    "limit": 10
+  }
+  ```
+- **Error Responses**:
+  
+  - `400 Bad Request`:
+    
     ```json
     {
-      "parking_spaces": [
-        {
-          "id": 1,
-          "address": "123 Maple Street",
-          "parking_count": 20,
-          "permit_required": true,
-          "is_full": false,
-          "created_at": "2024-04-15T10:00:00Z"
-        },
-        {
-          "id": 2,
-          "address": "456 Pine Avenue",
-          "parking_count": 15,
-          "permit_required": false,
-          "is_full": true,
-          "created_at": "2024-04-16T14:30:00Z"
-        }
-      ],
-      "total": 2,
-      "page": 1,
-      "limit": 10
+      "detail": "Invalid pagination parameters."
     }
     ```
-
-- **Error Responses**:
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Invalid pagination parameters."
-        }
-        ```
 
 #### Usage Example
 
@@ -1098,36 +951,36 @@ curl -X GET "http://localhost:8000/api/parking-spaces?page=1&limit=10"
 - **Path**: `/api/parking-spaces/{parking_space_id}`
 - **Method**: `GET`
 - **Description**: Retrieves detailed information about a specific parking space.
-  
+
 #### Request
 
 - **Path Parameters**:
-    - `parking_space_id` (integer, required): ID of the parking space.
+  - `parking_space_id` (integer, required): ID of the parking space.
 
 #### Response
 
 - **Status Code**: `200 OK`
 - **Body**:
-
+  
+  ```json
+  {
+    "id": 1,
+    "address": "123 Maple Street",
+    "parking_count": 20,
+    "permit_required": true,
+    "is_full": false,
+    "created_at": "2024-04-15T10:00:00Z"
+  }
+  ```
+- **Error Responses**:
+  
+  - `404 Not Found`:
+    
     ```json
     {
-      "id": 1,
-      "address": "123 Maple Street",
-      "parking_count": 20,
-      "permit_required": true,
-      "is_full": false,
-      "created_at": "2024-04-15T10:00:00Z"
+      "detail": "Parking space not found."
     }
     ```
-
-- **Error Responses**:
-    - `404 Not Found`:
-
-        ```json
-        {
-          "detail": "Parking space not found."
-        }
-        ```
 
 #### Usage Example
 
@@ -1148,52 +1001,51 @@ Handles user submissions for new parking space divisions, requiring authenticati
 - **Path**: `/api/submissions/parking-spaces`
 - **Method**: `POST`
 - **Description**: Allows authenticated users to submit a new parking space division request for admin approval.
-- **Authentication**: User must be authenticated and have passed verification code verification.
-  
+- **Authentication**: User must be authenticated and have passed reCAPTCHA verification during registration.
+
 #### Request
 
 - **Headers**:
-    - `Authorization: Bearer <user_jwt_token>`
-    - `Content-Type: application/json`
-
+  
+  - `Authorization: Bearer <user_jwt_token>`
+  - `Content-Type: application/json`
 - **Body**:
-
-    ```json
-    {
-      "address": "789 Birch Road",
-      "parking_count": 25,
-      "permit_required": false
-    }
-    ```
+  
+  ```json
+  {
+    "address": "789 Birch Road",
+    "parking_count": 25,
+    "permit_required": false
+  }
+  ```
 
 #### Response
 
 - **Status Code**: `201 Created`
 - **Body**:
-
+  
+  ```json
+  {
+    "submission_id": 3,
+    "message": "Parking submission submitted successfully and is pending approval."
+  }
+  ```
+- **Error Responses**:
+  
+  - `400 Bad Request`:
+    
     ```json
     {
-      "submission_id": 3,
-      "message": "Parking submission submitted successfully and is pending approval."
+      "detail": "Submission cooldown active. Please wait before submitting again."
     }
     ```
-
-- **Error Responses**:
-    - `400 Bad Request`:
-
-        ```json
-        {
-          "detail": "Submission cooldown active. Please wait before submitting again."
-        }
-        ```
-
-    - `401 Unauthorized`:
-
-        ```json
-        {
-          "detail": "Authentication credentials were not provided."
-        }
-        ```
+  - `401 Unauthorized`:
+    
+    ```json
+    {
+      "detail": "Authentication credentials were not provided."
+    }
+    ```
 
 #### Usage Example
 
