@@ -16,6 +16,22 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// 验证 JWT 令牌中间件
+const authenticateToken = (req, res, next) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    jwt.verify(token, secretKey, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Token expired or invalid' });
+        }
+        req.user = user;
+        next();
+    });
+};
+
 // 存储用户名
 app.post('/api/users', (req, res) => {
     const { username } = req.body;
@@ -87,24 +103,92 @@ app.post('/api/logout', (req, res) => {
     res.json({ message: 'Logout successful' });
 });
 
-// 验证 JWT 令牌中间件
-const authenticateToken = (req, res, next) => {
-    const token = req.cookies.token;
-    if (!token) {
-        return res.status(401).json({ error: 'Not authenticated' });
+// 获取收藏的停车场
+app.get('/api/getFavorites', authenticateToken, (req, res) => {
+    db.get("SELECT favoriteParkingLots FROM users WHERE username = ?", [req.user.username], (err, row) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        const favoriteParkingLots = JSON.parse(row.favoriteParkingLots || '[]');
+        res.json({ favoriteParkingLots });
+    });
+});
+
+// 添加用户收藏的停车场
+app.post('/api/addFavorite', authenticateToken, (req, res) => {
+    const { favoriteParkingLots } = req.body;
+
+    console.log('Received request to add favorite');
+    console.log('favoriteParkingLots:', favoriteParkingLots);
+
+    // 确保 favoriteParkingLots 是一个数组
+    if (!Array.isArray(favoriteParkingLots)) {
+        console.error('favoriteParkingLots is not an array');
+        return res.status(400).json({ error: 'favoriteParkingLots must be an array' });
     }
 
-    jwt.verify(token, secretKey, (err, user) => {
+    const favoriteParkingLotsStr = JSON.stringify(favoriteParkingLots);
+    db.run("UPDATE users SET favoriteParkingLots = ? WHERE username = ?", [favoriteParkingLotsStr, req.user.username], function(err) {
         if (err) {
-            return res.status(403).json({ error: 'Token expired or invalid' });
+            console.error('Error updating favorite parking lots:', err.message);
+            return res.status(500).json({ error: err.message });
         }
-        req.user = user;
-        next();
+        console.log('Successfully updated favorite parking lots in database');
+        res.json({ message: 'Favorites updated successfully', favoriteParkingLots });
     });
-};
+});
 
+// 删除用户收藏的停车场
+app.post('/api/removeFavorite', authenticateToken, (req, res) => {
+    const { removeUid } = req.body;
 
-// 受保护的路由示例
+    console.log('Received request to remove favorite');
+    console.log('removeUid:', removeUid);
+
+    // 从数据库中获取最新的收藏列表
+    db.get("SELECT favoriteParkingLots FROM users WHERE username = ?", [req.user.username], (err, row) => {
+        if (err) {
+            console.error('Error fetching favorite parking lots:', err.message);
+            return res.status(500).json({ error: err.message });
+        }
+
+        if (!row) {
+            console.error('No user found with the given username');
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        console.log('Fetched favorite parking lots from database:', row.favoriteParkingLots);
+
+        // 获取用户的收藏停车场列表
+        let favoriteParkingLots;
+        try {
+            favoriteParkingLots = JSON.parse(row.favoriteParkingLots || '[]');
+        } catch (parseErr) {
+            console.error('Error parsing favorite parking lots:', parseErr.message);
+            return res.status(500).json({ error: 'Failed to parse favorite parking lots' });
+        }
+
+        console.log('Parsed favorite parking lots:', favoriteParkingLots);
+
+        // 确保 removeUid 和收藏列表的类型匹配
+        const removeUidStr = String(removeUid);
+        favoriteParkingLots = favoriteParkingLots.filter(uid => String(uid) !== removeUidStr);
+
+        console.log('Updated favorites after removal:', favoriteParkingLots);
+
+        // 更新数据库中的收藏列表
+        const favoriteParkingLotsStr = JSON.stringify(favoriteParkingLots);
+        db.run("UPDATE users SET favoriteParkingLots = ? WHERE username = ?", [favoriteParkingLotsStr, req.user.username], function(err) {
+            if (err) {
+                console.error('Error updating favorite parking lots:', err.message);
+                return res.status(500).json({ error: err.message });
+            }
+            console.log('Successfully updated favorite parking lots in database');
+            res.json({ message: 'Favorites updated successfully', favoriteParkingLots: favoriteParkingLots });
+        });
+    });
+});
+
 app.get('/api/protected', authenticateToken, (req, res) => {
     res.json({ message: 'This is a protected route', user: req.user });
 });
