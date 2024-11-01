@@ -232,9 +232,10 @@ body, html {
     padding: 20px;
     border: 1px solid #888;
     width: 90%; /* 增加宽度以适应地图 */
-    max-width: 800px; /* 设置最大宽度 */
-    height: 80%; /* 设置高度以适应地图 */
-    max-height: 600px; /* 设置最大高度 */
+    max-width: 400px; /* 设置最大宽度 */
+    min-width: 300px; /* 设置最小宽度 */
+    height: auto; /* 自动高度 */
+    max-height: 80%; /* 设置最大高度 */
     text-align: center;
     overflow: hidden; /* 隐藏溢出内容 */
     display: flex;

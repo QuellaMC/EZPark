@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 usernameDisplay.textContent = data.user.username;
                 // 存储用户名到 localStorage
                 localStorage.setItem('username', data.user.username);
+                localStorage.setItem('token', data.token); // 存储 token
             }
         })
         .catch(error => {
@@ -155,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 usernameDisplay.textContent = username;
                 // 存储用户名到 localStorage
                 localStorage.setItem('username', username);
+                localStorage.setItem('token', data.token); // 存储 token
             }
         })
         .catch(error => {
@@ -175,8 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginRegisterLink.style.display = 'block';
                 userInfo.style.display = 'none';
                 usernameDisplay.textContent = '';
-                // 清除 localStorage 中的用户名
+                // 清除 localStorage 中的用户名和 token
                 localStorage.removeItem('username');
+                localStorage.removeItem('token');
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -184,7 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
+    // 定期检查用户的登录状态
+    setInterval(checkLoginStatus, 60000); // 每分钟检查一次
 
     // 初始检查当前页面
     const activePage = document.querySelector('.page.active');
@@ -216,4 +220,35 @@ function loadFavorites() {
         }
     })
     .catch(error => console.error('Error:', error));
+}
+
+function checkLoginStatus() {
+    fetch('/api/checkToken', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+    .then(response => {
+        if (response.status === 401) {
+            // 如果未认证，清除本地存储并更新页面显示
+            localStorage.removeItem('username');
+            localStorage.removeItem('token');
+            document.getElementById('loginRegisterLink').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'none';
+        } else {
+            return response.json();
+        }
+    })
+    .then(data => {
+        if (data && data.username) {
+            document.getElementById('loginRegisterLink').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('usernameDisplay').textContent = data.username;
+        }
+    })
+    .catch(error => {
+        console.error('Error checking login status:', error);
+    });
 }
