@@ -846,30 +846,34 @@ curl -X POST "http://localhost:8000/api/parking-spaces" \
 
 #### Response
 
-- **Status Code**: `200 OK`
-- **Body**:
+- **Success (200 OK):**
   
   ```json
   {
     "message": "Parking space status updated successfully."
   }
   ```
-- **Error Responses**:
+- **Cooldown Active (429 Too Many Requests):**
   
-  - `404 Not Found`:
-    
-    ```json
-    {
-      "detail": "Parking space not found."
-    }
-    ```
-  - `403 Forbidden`:
-    
-    ```json
-    {
-      "detail": "Not authorized to perform this action."
-    }
-    ```
+  ```json
+  {
+    "detail": "Cooldown active. Please wait 4 minutes and 30 seconds before updating again."
+  }
+  ```
+- **Parking Space Not Found (404 Not Found):**
+  
+  ```json
+  {
+    "detail": "Parking space not found."
+  }
+  ```
+- **Unauthorized (403 Forbidden):**
+  
+  ```json
+  {
+    "detail": "Not authorized to perform this action."
+  }
+  ```
 
 #### Usage Example
 
