@@ -16,6 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // 检查是否点击了 "My Common" 链接
+            if (targetId === 'page4') {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    // 如果未登录，显示登录模态框并阻止导航
+                    event.preventDefault();
+                    document.getElementById('authModal').style.display = 'block';
+                    return;
+                }
+            }
+
             // 阻止默认链接行为
             event.preventDefault();
 
@@ -41,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.title = 'Curbside Parking - EZPark';
             } else if (targetId === 'page3') {
                 document.title = 'Share Parking Status - EZPark';
+            } else if (targetId === 'page4') {
+                document.title = 'My Common - EZPark';
             }
         });
     });
@@ -190,6 +203,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 定期检查用户的登录状态
     setInterval(checkLoginStatus, 60000); // 每分钟检查一次
 
+    // 定期刷新 JWT 令牌
+    setInterval(refreshToken, 300000); // 每5分钟刷新一次令牌
+
     // 初始检查当前页面
     const activePage = document.querySelector('.page.active');
     if (activePage && activePage.id !== 'home') {
@@ -237,6 +253,7 @@ function checkLoginStatus() {
             localStorage.removeItem('token');
             document.getElementById('loginRegisterLink').style.display = 'block';
             document.getElementById('userInfo').style.display = 'none';
+            alert('Your session has expired. Please log in again.');
         } else {
             return response.json();
         }
@@ -250,5 +267,35 @@ function checkLoginStatus() {
     })
     .catch(error => {
         console.error('Error checking login status:', error);
+    });
+}
+
+function refreshToken() {
+    fetch('/api/refreshToken', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+    .then(response => {
+        if (response.status === 401) {
+            // 如果未认证，清除本地存储并更新页面显示
+            localStorage.removeItem('username');
+            localStorage.removeItem('token');
+            document.getElementById('loginRegisterLink').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'none';
+            alert('Your session has expired. Please log in again.');
+        } else {
+            return response.json();
+        }
+    })
+    .then(data => {
+        if (data && data.token) {
+            localStorage.setItem('token', data.token); // 更新 token
+        }
+    })
+    .catch(error => {
+        console.error('Error refreshing token:', error);
     });
 }
