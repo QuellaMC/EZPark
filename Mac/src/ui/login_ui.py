@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 
-class RegisterUI(tk.Frame):
+class LoginUI(tk.Frame):
     def __init__(self, master, auth_controller):
         super().__init__(master)
         self.auth_controller = auth_controller
@@ -24,10 +24,10 @@ class RegisterUI(tk.Frame):
         self.password_entry.grid(row=1, column=1, padx=10, pady=10)
 
         # Login Button
-        self.login_button = tk.Button(self, text="Register", command=self.register)
+        self.login_button = tk.Button(self, text="Login", command=self.login)
         self.login_button.grid(row=2, column=1, padx=10, pady=10, sticky="e")
 
-    def register(self):
+    def login(self):
         email = self.email_entry.get()
         password = self.password_entry.get()
 
@@ -35,11 +35,10 @@ class RegisterUI(tk.Frame):
             messagebox.showerror("Error", "Please enter both email and password.")
             return
 
-        # success, message = self.auth_controller.register(email, password)
+        # success, message = self.auth_controller.login(email, password)
         success, message = True, "none"
         if success:
-            messagebox.Message(title="Success", message="Register successful! Check YOUR EMAIL to activate the Account", icon=None).show()
+            messagebox.showinfo("Success", "Login successful!")
             # TODO: Transition to the dashboard UI
         else:
             messagebox.showerror("Error", message)
-
