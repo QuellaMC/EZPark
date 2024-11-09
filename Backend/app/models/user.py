@@ -17,3 +17,4 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     last_set_full_status_at = Column(DateTime(timezone=True), nullable=True)
+    last_parking_submission_at = Column(DateTime(timezone=True), nullable=True) 

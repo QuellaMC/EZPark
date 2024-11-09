@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30  # Token expiry time in minutes
     cooldown_set_full_status_minutes: int = 5  # Cooldown period in minutes
+    cooldown_parking_submission_minutes: int = 10  # Cooldown period in minutes
     
     # Additional settings can be added here
     # Example:
