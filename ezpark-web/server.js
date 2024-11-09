@@ -32,6 +32,13 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
+// 刷新 JWT 令牌
+app.post('/api/refreshToken', authenticateToken, (req, res) => {
+    const user = req.user;
+    const token = jwt.sign({ username: user.username, isAdmin: user.isAdmin }, secretKey, { expiresIn: '30m' });
+    res.json({ token });
+});
+
 // 存储用户名
 app.post('/api/users', (req, res) => {
     const { username } = req.body;
