@@ -1,13 +1,13 @@
-# EZPark Windows Client Directory Structure
+# EZPark Mac Client Directory Structure
 
 ## Overview
 
-The EZPark Windows client application provides users with an interface to access the EZPark platform, allowing for parking space search, booking, and management through a Windows environment. The client interacts with the backend API for user authentication and real-time data operations. Below is the detailed directory structure of the client application.
+The EZPark Mac client application provides users with an interface to access the EZPark platform, allowing for parking space search, booking, and management through a Mac environment. The client interacts with the backend API for user authentication and real-time data operations. Below is the detailed directory structure of the client application.
 
 ## Directory Structure
 
 ```
-ezpark_windows_client/
+ezpark_Mac_client/
 ├── main.py
 ├── src/
 │   ├── ui/

@@ -42,3 +42,4 @@ class RegisterUI(tk.Frame):
             # TODO: Transition to the dashboard UI
         else:
             messagebox.showerror("Error", message)
+
