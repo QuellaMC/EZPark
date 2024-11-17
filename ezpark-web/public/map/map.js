@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const favoriteParkingLots = data.favoriteParkingLots || [];
                             if (!favoriteParkingLots.includes(currentLocationUid)) {
                                 favoriteParkingLots.push(currentLocationUid);
-                                fetch('/api/updateFavorites', {
+                                fetch('/api/addFavorite', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
+    
     window.addEventListener('click', function(event) {
         const modal = document.getElementById('mapModal');
         if (event.target === modal) {
