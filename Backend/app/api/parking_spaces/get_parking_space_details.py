@@ -17,7 +17,7 @@ class ParkingSpaceDetailResponse(BaseModel):
     created_at: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 @router.get("/{parking_space_id}", response_model=ParkingSpaceDetailResponse)
 def get_parking_space_details(

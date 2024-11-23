@@ -1,30 +1,21 @@
 # app/utils/database.py
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from app.config.settings import settings
 
-# Create the SQLAlchemy engine using the DATABASE_URL from settings
+DATABASE_URL = settings.database_url
+
 engine = create_engine(
-    settings.database_url,
-    pool_pre_ping=True  # Enables the engine to check the connection's health before using it
+    DATABASE_URL,
+    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
 )
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create a configured "Session" class
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
-
-# Base class for all ORM models
 Base = declarative_base()
 
 def get_db():
-    """
-    Dependency function that provides a database session.
-    It ensures that the session is closed after the request is completed.
-    """
     db = SessionLocal()
     try:
         yield db

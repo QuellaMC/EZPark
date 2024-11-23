@@ -19,7 +19,7 @@ class ConfigResponse(BaseModel):
     cooldown_period_minutes: Optional[int]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UpdateConfigRequest(BaseModel):
     config_key: str = Field(..., example="smtp_server")

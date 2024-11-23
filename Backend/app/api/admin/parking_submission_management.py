@@ -21,13 +21,13 @@ class ParkingSubmissionResponse(BaseModel):
     submitted_at: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ReviewSubmissionRequest(BaseModel):
     status: str = Field(..., example="approved")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "status": "approved"
             }

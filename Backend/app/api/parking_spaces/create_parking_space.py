@@ -25,7 +25,7 @@ class CreateParkingSpaceResponse(BaseModel):
     created_at: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 @router.post("/", response_model=CreateParkingSpaceResponse, status_code=status.HTTP_201_CREATED)
 def create_parking_space(

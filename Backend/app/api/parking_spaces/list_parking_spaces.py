@@ -18,7 +18,7 @@ class ParkingSpaceResponse(BaseModel):
     created_at: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ListParkingSpacesResponse(BaseModel):
     parking_spaces: List[ParkingSpaceResponse]
