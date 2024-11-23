@@ -1,45 +1,70 @@
+# ui/register_ui.py
 import tkinter as tk
 from tkinter import messagebox
+from ..controllers.auth_controller import AuthController
+from ..utils.api_client import APIClient
 
 
-class RegisterUI(tk.Frame):
-    def __init__(self, master, auth_controller):
-        super().__init__(master)
-        self.auth_controller = auth_controller
+class RegisterUI:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("注册")
+        self.master.geometry("300x250")
+
+        # 初始化APIClient和AuthController
+        api_client = APIClient()
+        self.auth_controller = AuthController(api_client)
+
+        # 创建GUI组件
         self.create_widgets()
 
     def create_widgets(self):
-        # Email Label and Entry
-        self.email_label = tk.Label(self, text="Email:")
-        self.email_label.grid(row=0, column=0, padx=10, pady=10)
+        # 名字标签和输入框
+        tk.Label(self.master, text="名字").pack(pady=5)
+        self.name_entry = tk.Entry(self.master)
+        self.name_entry.pack(pady=5)
 
-        self.email_entry = tk.Entry(self, width=30)
-        self.email_entry.grid(row=0, column=1, padx=10, pady=10)
+        # 邮箱标签和输入框
+        tk.Label(self.master, text="邮箱").pack(pady=5)
+        self.email_entry = tk.Entry(self.master)
+        self.email_entry.pack(pady=5)
 
-        # Password Label and Entry
-        self.password_label = tk.Label(self, text="Password:")
-        self.password_label.grid(row=1, column=0, padx=10, pady=10)
+        # 密码标签和输入框
+        tk.Label(self.master, text="密码").pack(pady=5)
+        self.password_entry = tk.Entry(self.master, show="*")
+        self.password_entry.pack(pady=5)
 
-        self.password_entry = tk.Entry(self, show="*", width=30)
-        self.password_entry.grid(row=1, column=1, padx=10, pady=10)
+        # 注册按钮
+        tk.Button(self.master, text="注册", command=self.register).pack(pady=20)
 
-        # Login Button
-        self.login_button = tk.Button(self, text="Register", command=self.register)
-        self.login_button.grid(row=2, column=1, padx=10, pady=10, sticky="e")
+        # 返回登录按钮
+        tk.Button(self.master, text="返回登录", command=self.go_back).pack()
 
     def register(self):
+        name = self.name_entry.get()
         email = self.email_entry.get()
         password = self.password_entry.get()
 
-        if not email or not password:
-            messagebox.showerror("Error", "Please enter both email and password.")
+        if not name or not email or not password:
+            messagebox.showwarning("警告", "请填写所有字段")
             return
 
-        # success, message = self.auth_controller.register(email, password)
-        success, message = True, "none"
+        success, message = self.auth_controller.register(email, password, name)
         if success:
-            messagebox.Message(title="Success", message="Register successful! Check YOUR EMAIL to activate the Account", icon=None).show()
-            # TODO: Transition to the dashboard UI
+            messagebox.showinfo("成功", message)
+            self.master.destroy()
+            import login_ui
+            login_ui.LoginUI(tk.Tk())
         else:
-            messagebox.showerror("Error", message)
+            messagebox.showerror("错误", message)
 
+    def go_back(self):
+        self.master.destroy()
+        import login_ui
+        login_ui.LoginUI(tk.Tk())
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = RegisterUI(root)
+    root.mainloop()
