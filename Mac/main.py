@@ -1,31 +1,67 @@
 import tkinter as tk
+from tkinter import messagebox
+from src.utils.api_client import APIClient
+from src.models.users import User
 from src.ui.login_ui import LoginUI
-from src.ui.register_ui import RegisterUI
-# from src.controllers.auth_controller import AuthController
-# from src.utils.api_client import ApiClient
-# from src.utils.config import Config
+from src.ui.dashboard_ui import DashboardUI
 
+class MainApp:
+    def __init__(self):
+        """
+        Initializes the Main Application for EZPark Windows Client.
+        """
+        self.api_client = APIClient()
+        self.current_user = None  # 用于存储登录用户信息
+        self.root = tk.Tk()
+        self.root.title("EZPark")
+        self.root.geometry("400x300")
 
-def main(auth_controller=None):
-    # Initialize the application
-    root = tk.Tk()
-    root.title("EZPark - Parking Management System")
+        # 显示登录界面
+        self.show_login_ui()
 
-    # Load configuration settings
-    # config = Config()
-    # api_client = ApiClient(base_url=config.api_base_url)
-    # auth_controller = AuthController(api_client)
+    def show_login_ui(self):
+        """
+        Displays the login UI.
+        """
+        self.clear_window()
+        LoginUI(self.root)
 
-    # Initialize and display the login UI
-    login_ui = LoginUI(root, auth_controller)
-    login_ui.pack()
+    def show_dashboard_ui(self):
+        """
+        Displays the dashboard UI.
+        """
+        self.clear_window()
+        DashboardUI(self.root, self.current_user, self.api_client)
 
-    reg_ui = RegisterUI(root, auth_controller)
-    reg_ui.pack()
+    def on_login_success(self, user):
+        """
+        Callback function triggered after a successful login.
 
-    # Start the Tkinter event loop
-    root.mainloop()
+        Parameters:
+        - user (User): The logged-in user.
+        """
+        self.current_user = user
+        messagebox.showinfo("登录成功", f"欢迎 {user.name}!")
+        self.show_dashboard_ui()
+
+    def clear_window(self):
+        """
+        Clears the root window of all widgets.
+        """
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+    def run(self):
+        """
+        Starts the main application loop.
+        """
+        try:
+            self.root.mainloop()
+        except Exception as e:
+            messagebox.showerror("错误", f"发生未处理的错误: {str(e)}")
+            self.root.destroy()
 
 
 if __name__ == "__main__":
-    main()
+    app = MainApp()
+    app.run()
