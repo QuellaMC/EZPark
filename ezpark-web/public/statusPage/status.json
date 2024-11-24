@@ -1,0 +1,40 @@
+{
+  "North Parking Lot": [
+    {
+      "time": "2023-10-01 10:00",
+      "isTight": true,
+      "remainingSpots": 5
+    },
+    {
+      "time": "2023-10-01 11:00",
+      "isTight": false,
+      "remainingSpots": 20
+    },
+    {
+      "time": "2024-11-15T23:13",
+      "location": "North Parking Lot",
+      "isTight": true,
+      "remainingSpots": 2
+    }
+  ],
+  "Davison Parking Lot": [
+    {
+      "time": "2023-10-01 09:00",
+      "isTight": true,
+      "remainingSpots": 3
+    },
+    {
+      "time": "2023-10-01 12:00",
+      "isTight": false,
+      "remainingSpots": 15
+    }
+  ],
+  "Commons East Lot": [
+    {
+      "time": "2024-11-15T23:13",
+      "location": "Commons East Lot",
+      "isTight": true,
+      "remainingSpots": 1
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share info - EZPark</title>
+    <link rel="stylesheet" href="status.css">
+</head>
+<body>
+
+    <div class="subpage-text">
+        <div id="status" class="page active">
+            <h1 class="subpage-text">Parking Lot Status</h1>
+            <button id="reportButton">Report Parking Lot Status</button>
+            <div id="statusList" class="status-list"></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Report Parking Lot Status</h2>
+            <form id="reportForm">
+                <label for="time">Time:</label>
+                <input type="datetime-local" id="time" name="time" required>
+                <label for="location">Parking Lot Location:</label>
+                <select id="location" name="location" required></select>
+                <label for="remainingSpots">Remaining Spots:</label>
+                <input type="number" id="remainingSpots" name="remainingSpots" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="status.js"></script>
+</body>
+</html>
