@@ -4,10 +4,11 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const db = require('./public/database');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
-const secretKey = 'your_secret_key'; // 请使用更安全的密钥
+const secretKey = 'your_secret_key';
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -198,6 +199,35 @@ app.post('/api/removeFavorite', authenticateToken, (req, res) => {
 
 app.get('/api/protected', authenticateToken, (req, res) => {
     res.json({ message: 'This is a protected route', user: req.user });
+});
+
+app.get('/api/status', (req, res) => {
+    fs.readFile(path.join(__dirname, 'public/statusPage/status.json'), 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).send('Error reading status.json');
+        }
+        res.send(JSON.parse(data));
+    });
+});
+
+app.post('/api/status', (req, res) => {
+    const newStatus = req.body;
+    fs.readFile(path.join(__dirname, 'public/statusPage/status.json'), 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).send('Error reading status.json');
+        }
+        const statusData = JSON.parse(data);
+        if (!statusData[newStatus.location]) {
+            statusData[newStatus.location] = [];
+        }
+        statusData[newStatus.location].push(newStatus);
+        fs.writeFile(path.join(__dirname, 'public/statusPage/status.json'), JSON.stringify(statusData, null, 2), 'utf8', (err) => {
+            if (err) {
+                return res.status(500).send('Error writing to status.json');
+            }
+            res.send('Status reported successfully');
+        });
+    });
 });
 
 app.listen(port, () => {
