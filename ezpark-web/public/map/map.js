@@ -30,6 +30,25 @@ fetch('../res/map/json/locations.json')
     })
     .catch(error => console.error('Error loading locations:', error));
 
+// 加载 JSON 文件并创建随动元素
+fetch('../res/map/json/elements.json')
+    .then(response => response.json())
+    .then(data => {
+        const mapWrapper = document.querySelector('.map-wrapper');
+        data.forEach(item => {
+            const element = document.createElement('img');
+            element.id = item.id;
+            element.className = 'moving-element';
+            element.src = '../res/icon/logo~4.ico'; // 使用 ICO 图标
+            element.style.left = `${item.x}px`;
+            element.style.top = `${item.y}px`;
+            element.dataset.initialLeft = item.x;
+            element.dataset.initialTop = item.y;
+            mapWrapper.appendChild(element);
+        });
+    })
+    .catch(error => console.error('Error loading elements:', error));
+
 function zoomToLocation(location) {
     const { uid, x, y, scale, info, url, embedUrl } = location;
     currentZoom = { x, y, scale, info };
@@ -51,18 +70,16 @@ function zoomToLocation(location) {
 }
 
 function applyZoom() {
-    const { x, y, scale, info } = currentZoom;
+    const { x, y, scale } = currentZoom;
     const map = document.getElementById('map');
     const container = map.parentElement;
+    const movingElements = document.querySelectorAll('.moving-element');
 
     const containerWidth = container.clientWidth;
     const containerHeight = container.clientHeight;
 
     const originalWidth = map.naturalWidth;
     const originalHeight = map.naturalHeight;
-
-    const containerAspectRatio = containerWidth / containerHeight;
-    const imageAspectRatio = originalWidth / originalHeight;
 
     const scaleFactor = Math.max(
         containerWidth / originalWidth,
@@ -85,6 +102,19 @@ function applyZoom() {
     const offsetY = adjustedY * scale - containerCenterY;
 
     map.style.transform = `translate(${-offsetX}px, ${-offsetY}px) scale(${scale})`;
+
+    movingElements.forEach(element => {
+        const initialLeft = parseFloat(element.dataset.initialLeft);
+        const initialTop = parseFloat(element.dataset.initialTop);
+        
+        const elementWidth = element.offsetWidth;
+        const elementHeight = element.offsetHeight;
+        
+        const scaledLeft = (initialLeft * scaleFactor - cropX) * scale - elementWidth / 2;
+        const scaledTop = (initialTop * scaleFactor - cropY) * scale - elementHeight / 2;
+        
+        element.style.transform = `translate(${scaledLeft - offsetX}px, ${scaledTop - offsetY}px)`;
+    });
 }
 
 function resetZoom() {
@@ -120,6 +150,55 @@ function resetZoom() {
     document.getElementById('parking-info').style.display = 'none';
     document.getElementById('parkingButtons').style.display = 'none';
 }
+
+function moveMap(direction) {
+    const moveStep = 50 / currentZoom.scale;
+    switch (direction) {
+        case 'up':
+            currentZoom.y -= moveStep;
+            break;
+        case 'down':
+            currentZoom.y += moveStep;
+            break;
+        case 'left':
+            currentZoom.x -= moveStep;
+            break;
+        case 'right':
+            currentZoom.x += moveStep;
+            break;
+    }
+    updateCoordinatesDisplay();
+    applyZoom();
+}
+
+function updateCoordinatesDisplay() {
+    const coordinatesDisplay = document.getElementById('coordinatesDisplay');
+    coordinatesDisplay.innerText = `X: ${currentZoom.x.toFixed(2)}, Y: ${currentZoom.y.toFixed(2)}`;
+}
+
+function changeZoom(direction) {
+    const zoomStep = 0.2;
+    if (direction === 'in') {
+        currentZoom.scale += zoomStep;
+    } else if (direction === 'out') {
+        currentZoom.scale = Math.max(0.1, currentZoom.scale - zoomStep);
+    }
+    applyZoom();
+    updateCoordinatesDisplay();
+}
+
+function toggleCollapsible() {
+    const content = document.getElementById('collapsibleContent');
+    if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+    } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+    }
+}
+
+window.addEventListener('resize', applyZoom);
+
+window.addEventListener('load', resetZoom);
 
 document.addEventListener('DOMContentLoaded', function() {
     const buttonTexts = {
@@ -218,51 +297,3 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('mapModal').style.display = 'none';
     });
 });
-
-function moveMap(direction) {
-    const moveStep = 50 / currentZoom.scale;
-    switch (direction) {
-        case 'up':
-            currentZoom.y -= moveStep;
-            break;
-        case 'down':
-            currentZoom.y += moveStep;
-            break;
-        case 'left':
-            currentZoom.x -= moveStep;
-            break;
-        case 'right':
-            currentZoom.x += moveStep;
-            break;
-    }
-    updateCoordinatesDisplay();
-    applyZoom();
-}
-
-function updateCoordinatesDisplay() {
-    const coordinatesDisplay = document.getElementById('coordinatesDisplay');
-    coordinatesDisplay.innerText = `X: ${currentZoom.x.toFixed(2)}, Y: ${currentZoom.y.toFixed(2)}`;
-}
-
-function changeZoom(direction) {
-    const zoomStep = 0.2;
-    if (direction === 'in') {
-        currentZoom.scale += zoomStep;
-    } else if (direction === 'out') {
-        currentZoom.scale = Math.max(0.1, currentZoom.scale - zoomStep);
-    }
-    applyZoom();
-    updateCoordinatesDisplay();
-}
-
-function toggleCollapsible() {
-    const content = document.getElementById('collapsibleContent');
-    if (content.style.maxHeight) {
-        content.style.maxHeight = null;
-    } else {
-        content.style.maxHeight = content.scrollHeight + "px";
-    }
-}
-
-window.addEventListener('resize', applyZoom);
-window.addEventListener('load', resetZoom);
