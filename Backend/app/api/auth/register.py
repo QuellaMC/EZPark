@@ -1,6 +1,7 @@
 # app/api/auth/register.py
 
 from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import BackgroundTasks
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
 from app.utils.database import get_db
@@ -24,21 +25,21 @@ class RegisterResponse(BaseModel):
 @router.post("/register", response_model=RegisterResponse, status_code=status.HTTP_201_CREATED)
 def register_user(request: RegisterRequest, db: Session = Depends(get_db)):
     # Verify reCAPTCHA
-    recaptcha_response = request.recaptcha_token
-    recaptcha_secret = settings.recaptcha_secret_key
-    recaptcha_url = "https://www.google.com/recaptcha/api/siteverify"
-    payload = {
-        'secret': recaptcha_secret,
-        'response': recaptcha_response
-    }
-    recaptcha_verification = requests.post(recaptcha_url, data=payload)
-    recaptcha_result = recaptcha_verification.json()
+    #recaptcha_response = request.recaptcha_token
+    #recaptcha_secret = settings.recaptcha_secret_key
+    #recaptcha_url = "https://www.google.com/recaptcha/api/siteverify"
+    #payload = {
+    #    'secret': recaptcha_secret,
+    #    'response': recaptcha_response
+    #}
+    ##recaptcha_verification = requests.post(recaptcha_url, data=payload)
+    #recaptcha_result = recaptcha_verification.json()
 
-    if not recaptcha_result.get("success"):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="reCAPTCHA verification failed."
-        )
+    #if not recaptcha_result.get("success"):
+    #    raise HTTPException(
+    #        status_code=status.HTTP_400_BAD_REQUEST,
+    #        detail="reCAPTCHA verification failed."
+    #    )
     
     # Optionally: reCAPTCHA v3
     # if recaptcha_result.get("score", 0) < 0.5:
@@ -73,7 +74,7 @@ def register_user(request: RegisterRequest, db: Session = Depends(get_db)):
     
     # Send verification email
     try:
-        send_verification_email(new_user.email, new_user.id)
+        background_tasks.add_task(send_verification_email, new_user.email, new_user.id)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

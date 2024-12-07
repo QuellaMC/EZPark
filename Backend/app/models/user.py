@@ -20,6 +20,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     last_set_full_status_at = Column(DateTime(timezone=True), nullable=True)  # From previous section
     last_parking_submission_at = Column(DateTime(timezone=True), nullable=True)  # New Field
+    last_verification_email_sent = Column(DateTime(timezone=True), nullable=True)
 
     # Relationship to ParkingSubmission
     parking_submissions = relationship("ParkingSubmission", back_populates="user")
