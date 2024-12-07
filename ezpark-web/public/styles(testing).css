@@ -1,0 +1,47 @@
+/* Crowd Meter Styles */
+.crowd-meter-section {
+    text-align: center;
+    margin: 20px auto;
+}
+
+.meter-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+}
+
+.progress-ring {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.progress-ring circle {
+    fill: none;
+    stroke-width: 10;
+    r: 70;
+    cx: 75;
+    cy: 75;
+}
+
+.progress-ring__background {
+    stroke: #ddd;
+}
+
+.progress-ring__foreground {
+    stroke: green;
+    stroke-linecap: round;
+    stroke-dasharray: 439.82; /* Circumference of the circle */
+    stroke-dashoffset: 439.82; /* Initial offset */
+    transition: stroke-dashoffset 1s, stroke 1s;
+}
+
+.availability-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZPark</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="res/icon/logo~4.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- 左侧固定的菜单栏 -->
+    <div class="sidebar">
+        <h2>
+            <img src="res/icon/logo.png" alt="EZPark Logo" style="width: 40px; height: 40px; vertical-align: middle;">
+            EZPark
+        </h2>
+        <!-- Additional Sidebar Content -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Welcome to EZPark</h1>
+        <!-- Other main content sections -->
+
+        <!-- Crowd Meter Section -->
+        <div class="crowd-meter-section">
+            <h2>Crowd Meter</h2>
+            <div class="meter-container">
+                <svg class="progress-ring">
+                    <circle class="progress-ring__background"></circle>
+                    <circle class="progress-ring__foreground"></circle>
+                </svg>
+                <div class="availability-text" id="availabilityText">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
